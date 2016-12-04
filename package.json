@@ -1,0 +1,12 @@
+{
+  "name": "markov",
+  "version": "0.0.1",
+  "description": "markov chain tool",
+  "main": "index.js",
+  "author": "Samuel Ballan",
+  "license": "MIT",
+  "dependencies": {
+    "tsc": "^1.20150623.0",
+    "typescript": "^2.0.10"
+  }
+}
