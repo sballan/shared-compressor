@@ -1,13 +1,15 @@
+import { Word } from './word';
 import { Node } from './node';
 
 export class Chain {
-	private nodes: any;
+	private nodes: { [index: string]: Node } = {};
 
-	addWord(word: string | string[]) {
-		if (this.nodes[word]) {
-			this.nodes[word].freq++;
+	add(word: Word) {
+		if (!word) return;
+		if (this.nodes[word.value]) {
+			this.nodes[word.value].freq++;
 		} else {
-			this.nodes[word] = new Node(word);
+			this.nodes[word.value] = new Node(word);
 		}
 	}
 
