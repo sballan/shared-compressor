@@ -1,25 +1,35 @@
-import { Chain } from './chain';
 import { Word } from './word';
-import { Dictionary } from './dictionary';
 
 export class Node {
-	private _words: Word[];
-	chain: Chain = new Chain();
-	freq: number;
+	word: Word
+	map: { [index: string]: Node };
+	freq: number = 0;
 	
-	constructor(words: Word | Word[]) {
-		if (!Array.isArray(words)) words = [words];
-		this._words = words
+	constructor(word: Word) {
+		this.word = word;
 	}
 
-	addToChain(word: Word) {
-		this.chain.add(word)
+	private addWordToMap(word: Word) {
+		if (this.has(word)) return word;
+		else this.map[word.value] = new Node(word);
 	}
 
-	get words() {
-		const wordStrings = this._words.map(w => w.value)
-		return wordStrings.join(' ');
+	addNode(word: Word, level: number = 0) {
+		if (level <= 0) this.addWordToMap(word);
+		else this.addNode(word, level - 1)
 	}
 
-	get length() { return this.words.length; }
+	addNodes(words: Word[]) {
+		words.forEach(word => this.addNode(word));
+	}
+
+	has(word: Word) : boolean {
+		return this.map[word.value] ? true : false;
+	}
+
+	increment() {
+		this.freq++;
+	}
+
+
 }

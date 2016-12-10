@@ -2,32 +2,30 @@ import { Word } from './word';
 import { Dictionary } from './dictionary';
 
 export class Corpus {
+	public dictionary = new Dictionary();
 	private words: Word[];
-	private value: string;
+	private text: string;
 
-	constructor(value: string) {
-		this.value = value;
+	constructor(text: string) {
+		this.text = text;
 	}
 
 	parse() {
-		const arr = this.value.split(' ');
-		this.words = Dictionary.addWords(arr);
+		const arr = this.text.split(' ');
+		this.words = this.dictionary.addWords(arr);
 	}
 
-	addWord(word: Word) {
-		this.words.push(word);
-	}
-
-	makeChains() {
+	makeMap(depth: number = 1) {
 		const length = this.words.length;
 
 		for (let i = 0; i < length; i++) {
-			this.words[i].addNode(this.words[i + 1]);
+			this.words[i].addNodes(this.words.slice(i, i+depth));
+
 		}
 	}
 
 	print() {
-		console.log(this.words[74].chain);
+		console.log(this.words[20]);
 	}
 
 }

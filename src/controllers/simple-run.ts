@@ -11,7 +11,7 @@ export class SimpleRun {
 
 		const corpus = new Corpus(input);
 		corpus.parse();
-		corpus.makeChains();
+		corpus.makeMap(10);
 		corpus.print();
 		
 	}

@@ -1,23 +1,23 @@
-import { Chain } from './chain';
+import { WordMap } from './word-map';
 import { Word } from './word';
 
 export class Dictionary {
-	static words: {[index: string]: Word} = {}
+	words: {[index: string]: Word} = {}
 
-	static addWord(word: string) {
-		if (!this.words[word]) {
-			return this.words[word] = new Word(word);
+	addWord(wordString: string) {
+		if (!this.words[wordString]) {
+			return this.words[wordString] = new Word(wordString);
 		} else {
-			return this.words[word]
+			return this.words[wordString]
 		}
 	}
 
-	static addWords(words: string[]) {
-		return words.map(word => {
-			if (!this.words[word]) {
-				return this.words[word] = new Word(word)
+	addWords(wordStrings: string[]) {
+		return wordStrings.map(wordString => {
+			if (!this.words[wordString]) {
+				return this.words[wordString] = new Word(wordString)
 			}
-			return this.words[word];
+			return this.words[wordString];
 		})
 	}
 
