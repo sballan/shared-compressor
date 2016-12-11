@@ -1,8 +1,9 @@
 import { Node } from './node';
+import { Map } from '../utils/map';
 
 export class Word {
 	value: string;
-	nodes: { [index: string]: Node } = {}
+	nodes: Map<Node> = {}
 	id: string;
 
 

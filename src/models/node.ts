@@ -1,8 +1,9 @@
 import { Word } from './word';
+import { Map } from '../utils/map';
 
 export class Node {
 	word: Word
-	map: { [index: string]: Node };
+	map: Map<Node> = {};
 	freq: number = 0;
 	
 	constructor(word: Word) {
