@@ -1,1 +1,1 @@
-require('./dist');
+require('./dist/js/start');

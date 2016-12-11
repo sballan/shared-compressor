@@ -1,3 +1,3 @@
-import { start } from './main';
+export * from "./models";
+export * from "./controllers";
 
-start();
