@@ -1,9 +1,9 @@
 import { Word } from './word';
 import { Dictionary } from './dictionary';
+import { Chain } from './chain';
 
 export class Corpus {
-	public dictionary = new Dictionary();
-	private words: Word[];
+	public chain: Chain = new Chain();
 	private text: string;
 
 	constructor(text: string) {
@@ -11,8 +11,8 @@ export class Corpus {
 	}
 
 	parse() {
-		const arr = this.text.split(' ');
-		this.words = this.dictionary.addWords(arr);
+		const words = Word.parse(this.text)
+		this.chain.addLinks(words);
 	}
 
 	makeMap(depth: number = 1) {

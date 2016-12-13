@@ -1,36 +1,43 @@
 import { Word } from './word';
 import { Map } from '../utils/map';
 
-export class Node {
-	word: Word
-	map: Map<Node> = {};
-	freq: number = 0;
+export class Node<T> {
+	protected key: string;
+	protected value: T;
+	protected map: Map<Node<T>> = {};
 	
-	constructor(word: Word) {
-		this.word = word;
+	constructor(key?: string, value?: T) {
+		this.value = value;
 	}
 
-	private addWordToMap(word: Word) {
-		if (this.has(word)) return word;
-		else this.map[word.value] = new Node(word);
+	private _addToMap(key: string, value: T) : Node<T> {
+		if (this._has(key)) return this.map[key];
+		else return this.map[key] = new Node<T>(key, value);
 	}
 
-	addNode(word: Word, level: number = 0) {
-		if (level <= 0) this.addWordToMap(word);
-		else this.addNode(word, level - 1)
+	protected _addNode(key: string, value: T, path?: string[]) : Node<T> {
+		let node;
+		if (path) node = this._findNode(path);
+		else node = this;
+
+		return node._addToMap(key, value);
+	}
+	
+  protected _findNode(path: string[]) {
+  	const length = path.length;
+		let map = this.map;
+    let currentNode: Node<T>;   
+      
+		for (let i = 0; i < length; i++) {
+      currentNode = map[path[i]];
+      map = currentNode.map  
+    } 
+      
+    return currentNode;
 	}
 
-	addNodes(words: Word[]) {
-		words.forEach(word => this.addNode(word));
+	protected _has(key: string) : boolean {
+		return this.map[key] ? true : false;
 	}
-
-	has(word: Word) : boolean {
-		return this.map[word.value] ? true : false;
-	}
-
-	increment() {
-		this.freq++;
-	}
-
 
 }

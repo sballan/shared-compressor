@@ -1,24 +1,31 @@
-import { WordMap } from './word-map';
 import { Word } from './word';
+import { WordNode } from './word-node';
+import { Node } from './node';
 
-export class Dictionary {
-	words: {[index: string]: Word} = {}
-
-	addWord(wordString: string) {
-		if (!this.words[wordString]) {
-			return this.words[wordString] = new Word(wordString);
-		} else {
-			return this.words[wordString]
-		}
+export class Dictionary extends WordNode {
+	addWord(word: Word) : WordNode {
+		return super.addNode(word) as WordNode;
 	}
 
-	addWords(wordStrings: string[]) {
-		return wordStrings.map(wordString => {
-			if (!this.words[wordString]) {
-				return this.words[wordString] = new Word(wordString)
-			}
-			return this.words[wordString];
-		})
+	addWords(words: Word[]) {
+		super.addNodes(words);
 	}
+
+	has(word: Word) {
+		return super.has(word);
+	}
+
+	get(word: Word) : WordNode {
+		return this.map[word.value] as WordNode; 
+	}
+
+	remove(word: Word) {
+		this.map[word.value] = undefined;
+	}
+
+	find(wordString: string) : WordNode {
+		return this.map[wordString] as WordNode;
+	}
+
 
 }
