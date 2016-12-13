@@ -7,7 +7,7 @@ export class Dictionary extends WordNode {
 		return super.addNode(word) as WordNode;
 	}
 
-	addWords(words: Word[]) {
+	addWords(words: Word[]) : void {
 		super.addNodes(words);
 	}
 
@@ -15,16 +15,24 @@ export class Dictionary extends WordNode {
 		return super.has(word);
 	}
 
-	get(word: Word) : WordNode {
-		return this.map[word.value] as WordNode; 
+	getWord(word: Word) : Word {
+		return this.map[word.value].word; 
+	}
+
+	getWordNode(word: Word) : WordNode {
+		return this.map[word.value]; 
 	}
 
 	remove(word: Word) {
 		this.map[word.value] = undefined;
 	}
 
-	find(wordString: string) : WordNode {
-		return this.map[wordString] as WordNode;
+	findWord(wordString: string) : Word {
+		return this.map[wordString].word;
+	}
+
+	findWordNode(wordString: string) : WordNode {
+		return this.map[wordString];
 	}
 
 

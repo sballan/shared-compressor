@@ -15,7 +15,7 @@ export class Word {
 		const parsedWords = Parse.words(wordString);
 
 		if (parsedWords.length === 1) {
-			return [new Word(parsedWords[0])];
+			return [ new Word(parsedWords[0]) ];
 		} else {
 			return parsedWords.map(w => new Word(w));
 		}

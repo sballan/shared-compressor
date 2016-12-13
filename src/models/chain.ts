@@ -6,15 +6,24 @@ export class Chain {
 	public dictionary = new Dictionary();
 	public nodes: WordNode = new WordNode();
 
-	addLink(word: Word, path: string[]) {
-		const wordNode = this.dictionary.addWord(word);
-		this.nodes.addNode(wordNode.word, path);
+
+	addSingleWord(word: Word) {
+		return this.dictionary.addWord(word);
 	}
 
-	addLinks(words: Word[]) {
-		this.dictionary.addWords(words);
-		this.nodes.addNodes(words);
+	getSingleWord(wordString: string) : Word {
+		return this.dictionary.findWord(wordString)
 	}
+	
+	addSingleLink(word: Word, path?: string[]) : WordNode {
+		const wordNode = this.addSingleWord(word);
+		return this.nodes.addNode(wordNode.word, path);
+	}
+
+	getSingleLink(path: string | string[]) : WordNode {
+		return this.nodes.getNode(path);
+	}
+
 
 	print() {
 		console.log(this.nodes[20]);

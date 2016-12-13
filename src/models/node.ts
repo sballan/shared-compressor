@@ -22,6 +22,11 @@ export class Node<T> {
 
 		return node._addToMap(key, value);
 	}
+
+	protected _getNode(path: string | string[]) {
+		if (Array.isArray(path)) return this._findNode(path);
+		else return this.map[path];
+	}
 	
   protected _findNode(path: string[]) {
   	const length = path.length;
