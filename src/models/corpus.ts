@@ -1,3 +1,4 @@
+import { Parse } from './parse';
 import { Word } from './word';
 import { Dictionary } from './dictionary';
 import { Chain } from './chain';
@@ -5,27 +6,27 @@ import { Chain } from './chain';
 export class Corpus {
 	public chain: Chain = new Chain();
 	private text: string;
+	private wordStrings: string[];
 
 	constructor(text: string) {
 		this.text = text;
 	}
 
 	parse() {
-		const words = Word.parse(this.text)
-		this.chain.addLinks(words);
+		this.wordStrings = Parse.words(this.text)
+		// this.chain.addWords(this.wordStrings);
 	}
 
-	makeMap(depth: number = 1) {
-		const length = this.words.length;
+	makeMap(depth = 1) {
+		const length = this.wordStrings.length;
 
 		for (let i = 0; i < length; i++) {
-			this.words[i].addNodes(this.words.slice(i, i+depth));
-
+			this.chain.makeLinks(this.wordStrings.slice(i, i+depth))
 		}
 	}
 
 	print() {
-		console.log(this.words[20]);
+		console.log(this.chain.nodes);
 	}
 
 }

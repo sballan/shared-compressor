@@ -7,22 +7,38 @@ export class Chain {
 	public nodes: WordNode = new WordNode();
 
 
-	addSingleWord(word: Word) {
-		return this.dictionary.addWord(word);
-	}
-
-	getSingleWord(wordString: string) : Word {
-		return this.dictionary.findWord(wordString)
-	}
+	private addWord(wordString: string) : Word{
+		return this.dictionary.addWord(wordString).word;
+  }
 	
-	addSingleLink(word: Word, path?: string[]) : WordNode {
-		const wordNode = this.addSingleWord(word);
-		return this.nodes.addNode(wordNode.word, path);
+  private addWords(wordStrings: string[]): Word[]{
+  	return wordStrings.map(w => this.addWord(w));
 	}
 
-	getSingleLink(path: string | string[]) : WordNode {
+  private getWord(wordString: string): Word {
+    return this.dictionary.getWord(wordString)
+  }
+	
+	private addLink(wordString: string, path?: string[]) : WordNode {
+		const word = this.addWord(wordString);
+		return this.nodes.addNode(word, path);
+  }
+	
+	private getLink(path: string | string[]) : WordNode {
 		return this.nodes.getNode(path);
+  }
+	
+  makeLinks(wordStrings: string[]) {
+    const length = wordStrings.length;
+      
+    for (let i = 0; i < length; i++) {
+      let path = wordStrings.slice(0, i)
+      const arg = path.length > 0 ? path : null
+        
+			this.addLink(wordStrings[i], arg)
+		}  
 	}
+
 
 
 	print() {

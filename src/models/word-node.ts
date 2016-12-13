@@ -7,8 +7,8 @@ export class WordNode extends Node<Word> {
 	public map: Map<WordNode> = {};
 	public freq: number = 0;
 	
-	constructor(word?: Word) {
-		super(word.value, word)
+  constructor(word: Word = new Word("")) {
+    super(word.value, word)
 	}
 
 	addNode(word: Word, path?: string[]) : WordNode {

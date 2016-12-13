@@ -3,28 +3,29 @@ import { WordNode } from './word-node';
 import { Node } from './node';
 
 export class Dictionary extends WordNode {
-	addWord(word: Word) : WordNode {
+	addWord(wordString: string): WordNode {
+		const word = new Word(wordString);
 		return super.addNode(word) as WordNode;
 	}
 
-	addWords(words: Word[]) : void {
-		super.addNodes(words);
+	addWords(wordStrings: string[]): WordNode[] {
+		return wordStrings.map(w => this.addWord(w));
 	}
 
 	has(word: Word) {
 		return super.has(word);
 	}
 
-	getWord(word: Word) : Word {
-		return this.map[word.value].word; 
+	getWord(wordString: string) : Word {
+		return this.map[wordString].word; 
 	}
 
-	getWordNode(word: Word) : WordNode {
-		return this.map[word.value]; 
+	getWordNode(wordString: string) : WordNode {
+		return this.map[wordString]; 
 	}
 
-	remove(word: Word) {
-		this.map[word.value] = undefined;
+	remove(wordString: string) {
+		this.map[wordString] = undefined;
 	}
 
 	findWord(wordString: string) : Word {
