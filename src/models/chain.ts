@@ -8,7 +8,8 @@ export class Chain {
 
 
 	private addWord(wordString: string) : Word{
-		return this.dictionary.addWord(wordString).word;
+		const word = this.dictionary.addWord(wordString).value;
+		return word;
   }
 	
   private addWords(wordStrings: string[]): Word[]{

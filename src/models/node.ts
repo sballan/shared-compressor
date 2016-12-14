@@ -3,7 +3,7 @@ import { Map } from '../utils/map';
 
 export class Node<T> {
 	protected key: string;
-	protected value: T;
+	public value: T;
 	protected map: Map<Node<T>> = {};
 	
 	constructor(key?: string, value?: T) {

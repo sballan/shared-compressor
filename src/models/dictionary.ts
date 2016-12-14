@@ -5,7 +5,8 @@ import { Node } from './node';
 export class Dictionary extends WordNode {
 	addWord(wordString: string): WordNode {
 		const word = new Word(wordString);
-		return super.addNode(word) as WordNode;
+		const wordNode: WordNode = super.addNode(word);
+		return wordNode;
 	}
 
 	addWords(wordStrings: string[]): WordNode[] {
