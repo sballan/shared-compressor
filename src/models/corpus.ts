@@ -26,7 +26,7 @@ export class Corpus {
 	}
 
 	print() {
-		console.log(this.chain.nodes.map['hold'].map['these']);
+		console.log(this.chain.dictionary);
 	}
 
 }

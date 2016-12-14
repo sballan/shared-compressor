@@ -4,8 +4,6 @@ import { Dictionary } from './dictionary';
 
 export class Chain {
 	public dictionary = new Dictionary();
-	public nodes: WordNode = new WordNode();
-
 
 	private addWord(wordString: string) : Word{
 		const word = this.dictionary.addWord(wordString).value;
@@ -22,11 +20,11 @@ export class Chain {
 	
 	private addLink(wordString: string, path?: string[]) : WordNode {
 		const word = this.addWord(wordString);
-		return this.nodes.addNode(word, path);
+		return this.dictionary.addNode(word, path);
   }
 	
 	private getLink(path: string | string[]) : WordNode {
-		return this.nodes.getNode(path);
+		return this.dictionary.getNode(path);
   }
 	
   makeLinks(wordStrings: string[]) {
@@ -43,7 +41,7 @@ export class Chain {
 
 
 	print() {
-		console.log(this.nodes[20]);
+		console.log(this.dictionary[20]);
 	}
 
 }
