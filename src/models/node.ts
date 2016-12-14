@@ -2,23 +2,23 @@ import { Word } from './word';
 import { Map } from '../utils/map';
 
 export class Node<T> {
-	protected key: string;
-	protected value: T;
-	protected map: Map<Node<T>> = {};
+	public key: string;
+	public value: T;
+	public map: Map<Node<T>> = {};
+	public freq: number = 1;
 	
 	constructor(key?: string, value?: T) {
 		this.value = value;
 	}
 
-	protected _addNode(key: string, value: T, path?: string[]): Node<T> {
+	protected _addNode(key: string, value: T, path: string[] = []): Node<T> {
 		let node: Node<T>;
 
-		if (this._has(key)) node = this.map[key]
-		else node = this.map[key] = new Node<T>(key, value);
-
-		if(path) this._findNode(path).map[key] = node;
-
-		return node;
+		if (path.length > 0) {
+			return this._findNode(path)._addNode(key, value);
+		}
+		else if (this.map[key]) return this.map[key]
+		else return this.map[key] = new Node<T>(key, value);
 	}
 
 	protected _getNode(path: string | string[]) {
