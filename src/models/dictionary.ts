@@ -9,10 +9,6 @@ export class Dictionary extends WordNode {
 		return wordNode;
 	}
 
-	addWords(wordStrings: string[]): WordNode[] {
-		return wordStrings.map(w => this.addWord(w));
-	}
-
 	has(word: Word) {
 		return super.has(word);
 	}
