@@ -3,29 +3,27 @@ import { Map } from '../utils/map';
 
 export class Node<T> {
 	protected key: string;
-	public value: T;
+	protected value: T;
 	protected map: Map<Node<T>> = {};
 	
 	constructor(key?: string, value?: T) {
 		this.value = value;
 	}
 
-	private _addToMap(key: string, value: T) : Node<T> {
-		if (this._has(key)) return this.map[key];
-		else return this.map[key] = new Node<T>(key, value);
-	}
+	protected _addNode(key: string, value: T, path?: string[]): Node<T> {
+		let node: Node<T>;
 
-	protected _addNode(key: string, value: T, path?: string[]) : Node<T> {
-		let node;
-		if (path) node = this._findNode(path);
-		else node = this;
+		if (this._has(key)) node = this.map[key]
+		else node = this.map[key] = new Node<T>(key, value);
 
-		return node._addToMap(key, value);
+		if(path) this._findNode(path).map[key] = node;
+
+		return node;
 	}
 
 	protected _getNode(path: string | string[]) {
 		if (Array.isArray(path)) return this._findNode(path);
-		else return this.map[path];
+		return this.map[path];
 	}
 	
   protected _findNode(path: string[]) {
