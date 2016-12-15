@@ -68,7 +68,8 @@ describe(`Node`, () => {
 		node._addNode('secondKey', 'secondValue', ['firstKey']);
 
 		expect(node._getNode(["firstKey"])).toBeDefined();
-		// expect(node._getNode(["firstKey", "secondKey"])).toBeDefined();
+		expect(node._getNode(["firstKey"])._getNode(["secondKey"])).toBeDefined();
+		expect(node._getNode(["firstKey", "secondKey"])).toBeDefined();
 		// expect(node._getNode(["secondKey"])).toBeUndefined()
 	})
 

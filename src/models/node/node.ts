@@ -33,9 +33,8 @@ export class Node<T> {
     let currentNode: Node<T> = this;   
       
 		for (let i = 0; i < length; i++) {
-			console.log('\ncn', currentNode, '\nm', map)
-      currentNode = map[path[i]];
-      map = currentNode.map  
+			currentNode = map[path[i]];
+			map = currentNode ? currentNode.map : undefined;
     } 
       
     return currentNode;
