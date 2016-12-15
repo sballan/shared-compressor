@@ -13,9 +13,9 @@ export class Corpus {
 
 	parse() {
 		this.wordStrings = Parse.words(this.text)
-		this.wordStrings.forEach(w => {
-			this.dictionary.addWord(w);
-		})
+		// this.wordStrings.forEach(w => {
+		// 	this.dictionary.addWord(w);
+		// })
 	}
 
 	makeMap(depth = 1) {
@@ -30,7 +30,7 @@ export class Corpus {
 		const length = wordStrings.length
 
 		for (let i = 0; i < length; i++) {
-			const chain = this.wordStrings.slice(0, i + 1);
+			const chain = wordStrings.slice(0, i + 1);
 			this.dictionary.addWord(chain)
 		}
 

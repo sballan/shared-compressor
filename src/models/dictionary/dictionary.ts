@@ -10,7 +10,7 @@ export class Dictionary extends Node<Word> {
 		if (Array.isArray(wordString) && wordString.length > 1) {
 			path = wordString;
 			wordString = wordString.pop();
-		} else {
+		} else if(Array.isArray(wordString)) {
 			wordString = wordString[0]
 			path = [];
 		}
