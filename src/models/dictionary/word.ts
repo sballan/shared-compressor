@@ -1,6 +1,6 @@
-import { Node } from './node';
-import { Map } from '../utils/map';
-import { Parse } from './parse';
+import { Node } from '../node/node';
+import { Map } from '../../utils/map';
+import { Parse } from '../parse';
 
 export class Word {
 	value: string;

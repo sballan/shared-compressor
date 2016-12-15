@@ -1,10 +1,8 @@
 import { Parse } from './parse';
-import { Word } from './word';
-import { Dictionary } from './dictionary';
-import { Chain } from './chain';
+import { Word } from './dictionary/word';
+import { Dictionary } from './dictionary/dictionary';
 
 export class Corpus {
-	public chain: Chain = new Chain();
 	public dictionary = new Dictionary();
 	private text: string;
 	private wordStrings: string[];
@@ -33,14 +31,14 @@ export class Corpus {
 
 		for (let i = 0; i < length; i++) {
 			const chain = this.wordStrings.slice(0, i + 1);
-			this.dictionary.addWord(this.wordStrings.slice(0, i))
+			this.dictionary.addWord(chain)
 		}
 
 	}
 
 	
 	print() {
-		console.log(this.dictionary.map['\nWe']);
+		console.log(this.dictionary.map);
 	}
 
 }

@@ -1,6 +1,6 @@
 import { Word } from './word';
-import { Map } from '../utils/map';
-import { Node } from './node'
+import { Map } from '../../utils/map';
+import { Node } from '../node/node'
 
 export class Dictionary extends Node<Word> {
 	public map: Map<Node<Word>> = {};
