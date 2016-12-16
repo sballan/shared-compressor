@@ -16,8 +16,9 @@ export class Dictionary extends Node<Word> {
 		}
 
 		let word = this.getWord(wordString) || new Word(wordString);
-		super._addNode(word.value, word);
-		if(path.length > 0) super._addNode(word.value, word, path);
+		super._addNode(word.value, word).freq++;
+		if(path.length > 0) super._addNode(word.value, word, path).freq++;
+		
 	}
 
 	getWord(wordString: string): Word {
@@ -31,6 +32,20 @@ export class Dictionary extends Node<Word> {
 
 	has(word: Word): boolean {
 		return super._has(word.value)
+	}
+	
+	getNodes() {
+		const nodeArray = [];
+
+		for (let el in this.map) {
+			nodeArray.push(this.map[el]);
+		}
+	}
+
+	getMostFrequent(num: number) {
+		const nodes = this.getNodes();
+		
+
 	}
 
 }

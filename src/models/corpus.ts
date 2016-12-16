@@ -22,7 +22,8 @@ export class Corpus {
 		const length = this.wordStrings.length;
 
 		for (let i = 0; i < length; i++) {
-			this.makeChain(this.wordStrings.slice(i, i+depth))
+			const dictionary = this.makeChain(this.wordStrings.slice(i, i + depth))
+			if(i%1000 === 0) console.log(dictionary)
 		}
 	}
 
@@ -33,7 +34,7 @@ export class Corpus {
 			const chain = wordStrings.slice(0, i + 1);
 			this.dictionary.addWord(chain)
 		}
-
+		return this.dictionary
 	}
 
 	

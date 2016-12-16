@@ -5,7 +5,7 @@ export class Node<T> {
 	public key: string;
 	public value: T;
 	public map: Map<Node<T>> = {};
-	public freq: number = 1;
+	public freq: number = 0;
 	
 	constructor(key?: string, value?: T) {
 		this.key = key;

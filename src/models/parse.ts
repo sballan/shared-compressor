@@ -1,9 +1,11 @@
 export class Parse {
 	static chars(chars: string) {
+
 		return chars.split('');
 	}
 
 	static words(words: string) {
+		words.replace(/\n/, ' ')
 		return words.split(' ');
 	}
 
