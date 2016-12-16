@@ -31,5 +31,49 @@ describe(`Dictionary`, () => {
 		expect(dictionary.map['myWord'].map['myOtherWord']).toBeDefined();
 	})
 
+	it(`can get a word by passing a wordString: string to getWord()`, () => {
+		const dictionary = new Dictionary();
+		dictionary.addWord(['myWord']);
+		dictionary.addWord(['myWord', 'myOtherWord']);
+
+		expect(dictionary.getWord('myWord'))
+			.toBe(dictionary.map['myWord'].value);
+		expect(dictionary.getWord('myOtherWord'))
+			.toBe(dictionary.map['myOtherWord'].value);
+		expect(dictionary.getWord('myOtherWord'))
+			.toBe(dictionary.map['myWord'].map['myOtherWord'].value);
+	})
+
+	it(`can get a wordNode by passing a path: string to getWordNode()`, () => {
+		const dictionary = new Dictionary();
+		dictionary.addWord(['myWord']);
+
+		expect(dictionary.getWordNode('myWord'))
+			.toBe(dictionary.map['myWord']);
+	})
+
+	it(`can get a nested wordNode by passing a path: string[] to getWordNode()`, () => {
+		const dictionary = new Dictionary();
+		dictionary.addWord(['myWord']);
+		dictionary.addWord(['myWord', 'myOtherWord']);
+
+		expect(dictionary.getWordNode(['myWord']))
+			.toBe(dictionary.map['myWord']);
+		expect(dictionary.getWordNode(['myOtherWord']))
+			.toBe(dictionary.map['myOtherWord']);
+		expect(dictionary.getWordNode(['myWord', 'myOtherWord']))
+			.toBe(dictionary.map['myWord'].map['myOtherWord']);
+	})
+
+	it(`has has() method which takes a key: string argument and returns a boolean`, () => {
+		const dictionary = new Dictionary();
+		dictionary.addWord(['myWord']);
+		dictionary.addWord(['myWord', 'myOtherWord']);
+
+		expect(dictionary._has("myWord")).toBe(true);
+		expect(dictionary._has("myOtherWord")).toBe(true);
+
+	})
+
 
 })
