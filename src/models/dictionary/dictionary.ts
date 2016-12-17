@@ -1,6 +1,6 @@
 import { Word } from './word';
-import { Map } from '../../utils/map';
-import { Node } from '../node/node'
+import { Map } from '../../utils';
+import { Node } from '../node'
 
 export class Dictionary extends Node<Word> {
 	public map: Map<Node<Word>> = {};
@@ -44,7 +44,7 @@ export class Dictionary extends Node<Word> {
 
 	getMostFrequent(num: number) {
 		const nodes = this.getNodes();
-		
+
 
 	}
 

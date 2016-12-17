@@ -1,4 +1,4 @@
-import { Node } from '../node/node';
+import { Node } from '../node';
 import { Map } from '../../utils/map';
 import { Parse } from '../parse';
 
