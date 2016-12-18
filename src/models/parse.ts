@@ -5,7 +5,7 @@ export class Parse {
 	}
 
 	static words(words: string) {
-		words = words.replace(/(\r\n|\n|\r)/gm, ' ')
+		words = words.replace(/(\r\n|\n|--|\r)/gm, ' ')
 		return words.split(' ');
 	}
 
