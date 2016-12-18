@@ -5,21 +5,37 @@ import { Node } from '../node'
 export class Dictionary extends Node<Word> {
 	public map: Map<Node<Word>> = {};
 
-	addWord(wordString: string | string[], path: string[] = []) {
-		// if first argument is array, then we are adding a chain
-		if (Array.isArray(wordString) && wordString.length > 1) {
-			path = wordString;
-			wordString = wordString.pop();
-		} else if(Array.isArray(wordString)) {
-			wordString = wordString[0]
-			path = [];
-		}
+    get nodes() {
+        const nodeArray = [];
+        for (let el in this.map) nodeArray.push(this.map[el]);
+        return nodeArray
+    }
 
-		let word = this.getWord(wordString) || new Word(wordString);
-		super._addNode(word.value, word).freq++;
-		if(path.length > 0) super._addNode(word.value, word, path).freq++;
-		
-	}
+	addNode(key: string, value: Word, path: string[] = []) : Node<Word> {
+       const node = super.addNode(key, value);
+       node.freq++;
+
+       if(path.length > 0) super.addNode(key, value, path).freq++;
+
+       return node;
+
+    }
+
+    addWord(wordString: string | string[], path: string[] = []) {
+        // if first argument is array, then we are adding a chain
+        if (Array.isArray(wordString) && wordString.length > 1) {
+            path = wordString;
+            wordString = wordString.pop();
+        } else if(Array.isArray(wordString)) {
+            wordString = wordString[0];
+            path = [];
+        }
+
+        let word = this.getWord(wordString) || new Word(wordString);
+
+        this.addNode(wordString, word, path);
+
+    }
 
 	getWord(wordString: string): Word {
 		let node = this.map[wordString]
@@ -27,23 +43,15 @@ export class Dictionary extends Node<Word> {
 	}
 
 	getWordNode(path: string | string[]) : Node<Word> {
-		return super._getNode(path);
+		return super.getNode(path);
 	}
 
-	has(word: Word): boolean {
-		return super._has(word.value)
-	}
-	
-	getNodes() {
-		const nodeArray = [];
-
-		for (let el in this.map) {
-			nodeArray.push(this.map[el]);
-		}
+	has(wordString: string): boolean {
+		return super.has(wordString)
 	}
 
 	getMostFrequent(num: number) {
-		const nodes = this.getNodes();
+		const nodes = this.nodes;
 
 
 	}

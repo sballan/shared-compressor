@@ -12,6 +12,13 @@ export function get<S, O>(
 	args: any[],
 	object: Node<O>
 ) {
-	subject
+	return subject.getNode(args)
+}
 
+export function find<S, O>(
+    subject: Node<S>,
+    args: any[],
+    object: Node<O>
+) {
+    
 }

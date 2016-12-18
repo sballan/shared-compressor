@@ -24,7 +24,7 @@ describe(`Node`, () => {
 
 	it(`can add a node by passing a key and value to the method addNode()`, () => {
 		const node = new Node<String>("myKey", "myValue");
-		node._addNode('otherKey', 'otherValue');
+		node.addNode('otherKey', 'otherValue');
 		const newNode = node.map['otherKey'];
 		expect(newNode).toBeDefined();
 
@@ -32,8 +32,8 @@ describe(`Node`, () => {
 
 	it(`can add a node to a nested node by additionally passing a path: string[] to  method addNode()`, () => {
 		const node = new Node<String>("myKey", "myValue");
-		node._addNode('firstKey', 'firstValue');
-		node._addNode('secondKey', 'secondValue', ['firstKey']);
+		node.addNode('firstKey', 'firstValue');
+		node.addNode('secondKey', 'secondValue', ['firstKey']);
 		const newNode = node.map['firstKey'].map['secondKey'];
 
 		expect(newNode).toBeDefined();
@@ -44,9 +44,9 @@ describe(`Node`, () => {
 
 	it(`can find a nested node by passing a path: string[] to  method _findNode()`, () => {
 		const node = new Node<String>("myKey", "myValue");
-		node._addNode('firstKey', 'firstValue');
-		node._addNode('secondKey', 'secondValue', ['firstKey']);
-		const newNode = node._findNode(['firstKey', 'secondKey']);
+		node.addNode('firstKey', 'firstValue');
+		node.addNode('secondKey', 'secondValue', ['firstKey']);
+		const newNode = node.findNode(['firstKey', 'secondKey']);
 
 		expect(node.map['firstKey'].map['secondKey']).toBe(newNode)
 		expect(newNode).toBeDefined();
@@ -57,26 +57,26 @@ describe(`Node`, () => {
 
 	it(`can get a node with nethod getNode() by passing it a path: string`, () => {
 		const node = new Node<String>("myKey", "myValue");
-		const newNode = node._addNode('otherKey', 'otherValue');
+		const newNode = node.addNode('otherKey', 'otherValue');
 
-		expect(node._getNode(newNode.key)).toBe(newNode);
+		expect(node.getNode(newNode.key)).toBe(newNode);
 	})
 
 	it(`can get a node with nethod getNode() by passing it a path: string[]`, () => {
 		const node = new Node<String>("myKey", "myValue");
-		node._addNode('firstKey', 'firstValue');
-		node._addNode('secondKey', 'secondValue', ['firstKey']);
+		node.addNode('firstKey', 'firstValue');
+		node.addNode('secondKey', 'secondValue', ['firstKey']);
 
-		expect(node._getNode(["firstKey"])).toBeDefined();
-		expect(node._getNode(["firstKey"])._getNode(["secondKey"])).toBeDefined();
-		expect(node._getNode(["firstKey", "secondKey"])).toBeDefined();
-		// expect(node._getNode(["secondKey"])).toBeUndefined()
+		expect(node.getNode(["firstKey"])).toBeDefined();
+		expect(node.getNode(["firstKey"]).getNode(["secondKey"])).toBeDefined();
+		expect(node.getNode(["firstKey", "secondKey"])).toBeDefined();
+		// expect(node.getNode(["secondKey"])).toBeUndefined()
 	})
 
 	it(`has has() method which takes a key: string argument and returns a boolean`, () => {
 		const node = new Node<String>("myKey", "myValue");
-		const newNode = node._addNode('otherKey', 'otherValue');
-		const bool = node._has("otherKey")
+		const newNode = node.addNode('otherKey', 'otherValue');
+		const bool = node.has("otherKey")
 
 		expect(bool).toBe(true);
 

@@ -1,4 +1,3 @@
-import { Word } from '../dictionary/word';
 import { Map } from '../../utils/map';
 
 export class Node<T> {
@@ -12,22 +11,22 @@ export class Node<T> {
 		this.value = value;  
 	}
 
-	_addNode(key: string, value: T, path: string[] = []): Node<T> {
+	addNode(key: string, value: T, path: string[] = []): Node<T> {
 		let node: Node<T>;
 
 		if (path.length > 0) {
-			return this._findNode(path)._addNode(key, value);
+			return this.findNode(path).addNode(key, value);
 		}
 		else if (this.map[key]) return this.map[key]
 		else return this.map[key] = new Node<T>(key, value);
 	}
 
-	_getNode(path: string | string[]) {
-		if (Array.isArray(path)) return this._findNode(path);
+	getNode(path: string | string[]) {
+		if (Array.isArray(path)) return this.findNode(path);
 		return this.map[path];
 	}
 	
-  _findNode(path: string[]) {
+  findNode(path: string[]) {
   	const length = path.length;
 		let map = this.map;
     let currentNode: Node<T> = this;   
@@ -40,7 +39,7 @@ export class Node<T> {
     return currentNode;
 	}
 
-	_has(key: string) : boolean {
+	has(key: string) : boolean {
 		return this.map[key] ? true : false;
 	}
 

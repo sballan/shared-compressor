@@ -70,8 +70,8 @@ describe(`Dictionary`, () => {
 		dictionary.addWord(['myWord']);
 		dictionary.addWord(['myWord', 'myOtherWord']);
 
-		expect(dictionary._has("myWord")).toBe(true);
-		expect(dictionary._has("myOtherWord")).toBe(true);
+		expect(dictionary.has("myWord")).toBe(true);
+		expect(dictionary.has("myOtherWord")).toBe(true);
 
 	})
 
