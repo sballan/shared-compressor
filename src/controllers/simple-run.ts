@@ -5,13 +5,13 @@ export class SimpleRun {
 	
 	static start(input: string) {
 		/**
-		 *	1. turn input string into nodes (a 'flat chain'?) in a hash
+		 *	1. turn input string into nodes (a 'flat chain'?) in a map
 		 *  2. go through input and assign all possible next values for each node
 		 */
 
 		const corpus = new Corpus(input);
 		corpus.parse();
-		corpus.makeMap(10);
+		corpus.makeMap(20);
 		corpus.print();
 		
 	}

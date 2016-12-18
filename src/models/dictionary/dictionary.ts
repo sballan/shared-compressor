@@ -1,15 +1,12 @@
 import { Word } from './word';
-import { Map } from '../../utils';
 import { Node } from '../node'
 
 export class Dictionary extends Node<Word> {
-	public map: Map<Node<Word>> = {};
-
-    get nodes() {
-        const nodeArray = [];
-        for (let el in this.map) nodeArray.push(this.map[el]);
-        return nodeArray
-    }
+	// get nodes() {
+	// 		const nodeArray = [];
+	// 		for (let el in this.map) nodeArray.push(this.map[el]);
+	// 		return nodeArray
+	// }
 
 	addNode(key: string, value: Word, path: string[] = []) : Node<Word> {
        const node = super.addNode(key, value);
@@ -19,26 +16,26 @@ export class Dictionary extends Node<Word> {
 
        return node;
 
-    }
+	}
 
-    addWord(wordString: string | string[], path: string[] = []) {
-        // if first argument is array, then we are adding a chain
-        if (Array.isArray(wordString) && wordString.length > 1) {
-            path = wordString;
-            wordString = wordString.pop();
-        } else if(Array.isArray(wordString)) {
-            wordString = wordString[0];
-            path = [];
-        }
+	addWord(wordString: string | string[], path: string[] = []) {
+			// if first argument is array, then we are adding a chain
+			if (Array.isArray(wordString) && wordString.length > 1) {
+					path = wordString;
+					wordString = wordString.pop();
+			} else if(Array.isArray(wordString)) {
+					wordString = wordString[0];
+					path = [];
+			}
 
-        let word = this.getWord(wordString) || new Word(wordString);
+			let word = this.getWord(wordString) || new Word(wordString);
 
-        this.addNode(wordString, word, path);
+			this.addNode(wordString, word, path);
 
-    }
+	}
 
 	getWord(wordString: string): Word {
-		let node = this.map[wordString]
+		let node = this.map.get(wordString);
 		return node ? node.value : undefined;
 	}
 
@@ -51,7 +48,7 @@ export class Dictionary extends Node<Word> {
 	}
 
 	getMostFrequent(num: number) {
-		const nodes = this.nodes;
+		// const nodes = this.nodes;
 
 
 	}

@@ -1,1 +1,1 @@
-export { Map } from './map';
+export { Hash } from './hash';

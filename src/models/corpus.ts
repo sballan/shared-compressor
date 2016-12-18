@@ -1,5 +1,4 @@
 import { Parse } from './parse';
-import { Word } from './dictionary/word';
 import { Dictionary } from './dictionary/dictionary';
 
 export class Corpus {

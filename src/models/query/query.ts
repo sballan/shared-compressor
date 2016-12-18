@@ -1,4 +1,4 @@
-import { Map } from '../../utils';
+import { Hash } from '../../utils';
 import { Node } from '../node'
 import { Dictionary, Word } from '../dictionary';
 import { Verb } from './verbs';

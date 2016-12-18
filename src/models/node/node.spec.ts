@@ -1,7 +1,7 @@
 import { Node } from './node';
 
 describe(`Node`, () => {
-	it(`can be contructed with no arguments`, () => {
+	it(`can be constructed with no arguments`, () => {
 		const node = new Node();
 
 		expect(node).toBeDefined();
@@ -19,13 +19,13 @@ describe(`Node`, () => {
 		expect(node.key).toBe("myKey")
 		expect(node.value).toBe("myValue");
 		expect(node.map).toBeDefined();
-		expect(node.freq).toBe(1);
+		expect(node.freq).toBe(0);
 	})
 
 	it(`can add a node by passing a key and value to the method addNode()`, () => {
 		const node = new Node<String>("myKey", "myValue");
 		node.addNode('otherKey', 'otherValue');
-		const newNode = node.map['otherKey'];
+		const newNode = node.map.get('otherKey');
 		expect(newNode).toBeDefined();
 
 	})
@@ -34,7 +34,7 @@ describe(`Node`, () => {
 		const node = new Node<String>("myKey", "myValue");
 		node.addNode('firstKey', 'firstValue');
 		node.addNode('secondKey', 'secondValue', ['firstKey']);
-		const newNode = node.map['firstKey'].map['secondKey'];
+		const newNode = node.map.get('firstKey').map.get('secondKey');
 
 		expect(newNode).toBeDefined();
 		expect(newNode.key).toBe('secondKey');
@@ -42,13 +42,13 @@ describe(`Node`, () => {
 
 	})
 
-	it(`can find a nested node by passing a path: string[] to  method _findNode()`, () => {
+	it(`can find a nested node by passing a path: string[] to  method findNode()`, () => {
 		const node = new Node<String>("myKey", "myValue");
 		node.addNode('firstKey', 'firstValue');
 		node.addNode('secondKey', 'secondValue', ['firstKey']);
 		const newNode = node.findNode(['firstKey', 'secondKey']);
 
-		expect(node.map['firstKey'].map['secondKey']).toBe(newNode)
+		expect(node.map.get('firstKey').map.get('secondKey')).toBe(newNode)
 		expect(newNode).toBeDefined();
 		expect(newNode.key).toBe('secondKey');
 		expect(newNode.value).toBe('secondValue');
