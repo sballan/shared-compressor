@@ -75,5 +75,21 @@ describe(`Dictionary`, () => {
 
 	})
 
+	it(`has hasPath() method which takes a key: string[] argument and returns a boolean`, () => {
+		const dictionary = new Dictionary();
+		dictionary.addWord(['myWord']);
+		dictionary.addWord(['myWord', 'myOtherWord']);
+		dictionary.addWord(['myWord', 'myOtherWord', 'myThirdWord']);
+
+		expect(dictionary.hasPath(["myWord"])).toBe(true);
+		expect(dictionary.hasPath(["myWord", "myOtherWord"])).toBe(true);
+		expect(dictionary.hasPath(["myWord", "myOtherWord", "myThirdWord"])).toBe(true);
+
+	})
+
+	xit(`has hasPathFrequency() method which takes a key: string[] argument and returns a number`, () => {
+
+	})
+
 
 })

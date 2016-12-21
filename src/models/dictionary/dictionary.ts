@@ -45,6 +45,10 @@ export class Dictionary extends Node<Word> {
 		return !!super.getNode(path);
 	}
 
+	pathFrequency(path: string[]) : number {
+		return this.getWordNode(path).freq;
+	}
+
 	getMostFrequent(num: number = 20) {
 		return this.nodes.sort((a, b) : number => {
 			return a.freq - b.freq;

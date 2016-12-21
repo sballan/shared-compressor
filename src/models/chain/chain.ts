@@ -9,14 +9,6 @@ export class Chain {
 		public path: string[]
 	) { }
 
-	hasPath(path: string[]) : boolean {
-		return this.dictionary.hasPath(path);
-	}
-
-	pathFrequency(path: string[]) : number {
-		return this.dictionary.getWordNode(path).freq;
-	}
-
 	hasSubPath(path: string[]) : boolean {
 		const pathString1 = this.path.join('');
 		const pathString2 = path.join('');
@@ -31,19 +23,26 @@ export class Chain {
 			const inner = path.slice(i);
 
 			for (let i = inner.length; i > 0; i--) {
-				const subPath = inner.slice(0, i + 1)
+				const subPath = inner.slice(0, i)
 				if (this.hasSubPath(subPath)) {
 					subPaths.push(subPath)
 				}
 			}
 		}
 
-		return subPaths;
+		return _.uniq(subPaths);
 	}
 
 
 	largestInnerSubPath(path: string[]) {
+		const inner = this.innerSubPaths(path);
 
+		let longest = inner[0];
+		inner.forEach(s => {
+			longest = (longest.length > s.length) ? longest : s;
+		})
+		
+		return longest;
 	}
 
 	findSubPath(path: string[]) {
