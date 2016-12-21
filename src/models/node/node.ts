@@ -3,10 +3,18 @@ export class Node<T> {
 	public value: T;
 	public map: Map<string, Node<T>> = new Map();
 	public freq: number = 0;
-	
-	constructor(key?: string, value?: T) {
+	public parent: Node<T>;
+
+	get nodes() {
+		const nodes = [];
+		this.map.forEach(n => nodes.push(n))
+		return nodes;
+	}
+
+	constructor(key?: string, value?: T, parent?: Node<T>) {
 		this.key = key;
 		this.value = value;  
+		this.parent = parent;
 	}
 
 	addNode(key: string, value: T, path: string[] = []): Node<T> {
@@ -15,7 +23,7 @@ export class Node<T> {
 		}
 		else if (this.map.has(key)) return this.map.get(key);
 		else {
-			this.map.set(key, new Node<T>(key, value));
+			this.map.set(key, new Node<T>(key, value, this));
 			return this.map.get(key);
 		}
 	}
@@ -24,7 +32,7 @@ export class Node<T> {
 		if (Array.isArray(path)) return this.findNode(path);
 		return this.map.get(path);
 	}
-	
+
   findNode(path: string[]) : Node<T> {
   	const length = path.length;
 		let map = this.map;
@@ -41,5 +49,30 @@ export class Node<T> {
 	has(key: string) : boolean {
 		return this.map.has(key);
 	}
+
+	getDec(path: string[]) : Node<T>[] {
+		let length = path.length;
+		const nodes: Node<T>[] = [];
+		let current: Node<T> = this;
+
+		for (let i = 0; i < length; i++) {
+			current = current.getNode(path[i]);
+			nodes.push(current);
+		}
+		return nodes;
+	}
+
+	getAnc() : Node<T>[] {
+		const nodes: Node <T>[] = [];
+		let currentNode: Node<T> = this;
+
+		while (currentNode.parent) {
+			currentNode = currentNode.parent;
+			nodes.push(currentNode)
+		}
+		return nodes;
+
+	}
+	
 
 }

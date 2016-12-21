@@ -11,8 +11,10 @@
     "browserify": "browserify ./dist/js/start.js -o ./dist/bundle.js"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.44",
     "@types/node": "^6.0.52",
     "jasmine": "^2.5.2",
+    "lodash": "^4.17.2",
     "tsc": "^1.20150623.0",
     "typescript": "^2.0.10"
   },

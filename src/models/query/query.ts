@@ -4,20 +4,20 @@ import { Dictionary, Word } from '../dictionary';
 import { Verb } from './verbs';
 
 
-export class Query<S, O> {
+export class Query<S> {
 	public executed: boolean = false;
 
 	constructor(
 		public subject: Node<S>,
 		public verb: Verb,
 		public args: any[],
-		public object: Node<O>
+		public condition: (s: Node<S>, v: Verb, a: any[] ) => boolean
 	) { }
 
 
 
 	execute() {
 		this.executed = true;
-		return this.verb<S, O>(this.subject, this.args, this.object)
+		return this.condition(this.subject, this.verb, this.args);
 	}
 }
