@@ -1,4 +1,10 @@
 export class Sym<T> {
+	static separator: string = ''
+
+	static parse(input) {
+		return input.split(this.separator).map(s => new Sym(s));
+	}
+
 	public map: Map<string, T> = new Map();
 
 	constructor(
@@ -17,6 +23,10 @@ export class Sym<T> {
 }
 
 export class Word extends Sym<string> {
+	static parse(input) {
+		return input.split(' ').map(s => new Word(s))
+	}
+
 	constructor(
 		public key: string,
 		public value: string[] = key.split('')
@@ -27,26 +37,41 @@ export class Word extends Sym<string> {
 }
 
 export class Sentance extends Sym<Word> {
+	static parse(input) {
+		return input.split('.').map(s => new Sentance(s))
+	}
+
 	constructor(
 		public key: string,
-		public value: Word[] = key.split(' ').map(w => new Word(w))) {
+		public value: Word[] = Word.parse(key)
+	)
+	{
 		super(key, value);
 	}
 
 }
 
 export class Paragraph extends Sym<Sentance> {
+	static parse(input) : Paragraph[] {
+		return input.split('.\n\n').map(s => new Paragraph(s))
+	}
+
 	constructor(
 		public key: string,
-		public value: Sentance[] = key.split('.').map(s => new Sentance(s))) {
+		public value: Sentance[] = Sentance.parse(key)
+	)
+	{
 		super(key, value);
 	}
 }
 
 export class Corpus extends Sym<Paragraph> {
+
 	constructor(
 		public key: string,
-		public value: Paragraph[] = key.split('.\n\n').map(s => new Paragraph(s))) {
+		public value: Paragraph[] = Paragraph.parse(key)
+	)
+	{
 		super(key, value);
 	}
 }
@@ -73,11 +98,20 @@ export class Parser {
 			})
 		})
 	}
-	
-	scanCorpus() {
-		return this.corpus = new Corpus(this.input);
 
+	private scanCorpus(input = this.input) {
+		return this.corpus = new Corpus(input);
 	}
+
+	private scanParagraph(input: string | Paragraph[] = this.corpus.value) {
+		if (!Array.isArray(input)) {
+			input = input.split.map(p=> new Paragraph(p))
+		}
+	}
+	
+	// scanCorpus() {
+	// 	return this.corpus = new Corpus(this.input);
+	// }
 
 	scanParagraphs() : Map<string, Paragraph> {
 		if (this.corpus.value.length > this.paragraphs.size) {
@@ -100,6 +134,10 @@ export class Parser {
 	}
 
 	scanWords() {
+				
+		})
+
+
 		this.sentances.forEach(s => {
 			s.map.forEach(w => {
 				this.words.set(w.key, w);
