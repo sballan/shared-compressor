@@ -46,7 +46,7 @@ export class Paragraph extends Sym<Sentance> {
 export class Corpus extends Sym<Paragraph> {
 	constructor(
 		public key: string,
-		public value: Paragraph[] = key.split('\n').map(s => new Paragraph(s))) {
+		public value: Paragraph[] = key.split('.\n\n').map(s => new Paragraph(s))) {
 		super(key, value);
 	}
 }
@@ -58,8 +58,22 @@ export class Parser {
 	public sentances: Map<string, Sentance> = new Map();
 	public words: Map<string, Word> = new Map();
 
-	constructor(public input: string) {}
+	private _paragraphs: Paragraph[]	
+	private _sentances: Sentance[];
+	private _words: Word[];
 
+	constructor(public input: string) { }
+	
+	scanAll() {
+		this.corpus.value.forEach(p => {
+			p.value.forEach(s => {
+				s.value.forEach(w => {
+					
+				})
+			})
+		})
+	}
+	
 	scanCorpus() {
 		return this.corpus = new Corpus(this.input);
 
@@ -73,32 +87,32 @@ export class Parser {
 		}	
 
 		return this.paragraphs;
-
 	}
 
 	scanSentances(): Map<string, Sentance>{
-			this.scanParagraphs().forEach(p => {
+			this.paragraphs.forEach(p => {
 				p.value.forEach(s => {
 					this.sentances.set(s.key, s);
 				})
 			})
 
 		return this.sentances;
-			
 	}
 
 	scanWords() {
-			this.scanSentances().forEach(s => {
-				s.value.forEach(w => {
-					this.words.set(w.key, w);
-				})
+		this.sentances.forEach(s => {
+			s.map.forEach(w => {
+				this.words.set(w.key, w);
 			})
+		})
 
 		return this.words;
 	}
 
 	scan() {
 		this.scanCorpus();
+		this.scanParagraphs();
+		this.scanSentances();
 		this.scanWords();
 	}
 
