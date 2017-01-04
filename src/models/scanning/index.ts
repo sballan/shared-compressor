@@ -1,27 +1,25 @@
 export class Sym<T> {
-	public map: Map<string, T>;
+	public map: Map<string, T> = new Map();
 
 	constructor(
 		public key: string,
-		public value?: any
+		public value: any[] = []
 	) { 
 		this.remap();
 	}
 
 	protected remap() {
 		this.value.forEach(w => {
-			this.map[w.key] = w;
+			this.map.set(w.key , w);
 		})
 	}
 
 }
 
 export class Word extends Sym<string> {
-	public readonly map: Map<string, string>;
-
 	constructor(
 		public key: string,
-		public value?: string[]
+		public value: string[] = key.split('')
 	) {
 		super(key, value);
 	}
@@ -29,27 +27,27 @@ export class Word extends Sym<string> {
 }
 
 export class Sentance extends Sym<Word> {
-	public readonly map: Map<string, Word>;
-
-	constructor(public key: string, public value?: Word[]){
-		super(key, key.split(' ').map(w => new Word(w)));
+	constructor(
+		public key: string,
+		public value: Word[] = key.split(' ').map(w => new Word(w))) {
+		super(key, value);
 	}
 
 }
 
 export class Paragraph extends Sym<Sentance> {
-	public readonly map: Map<string, Sentance>;
-
-	constructor(public key: string, public value?: Sentance[]){
-		super(key, key.split('.').map(s => new Sentance(s)));
+	constructor(
+		public key: string,
+		public value: Sentance[] = key.split('.').map(s => new Sentance(s))) {
+		super(key, value);
 	}
 }
 
 export class Corpus extends Sym<Paragraph> {
-	public readonly map: Map<string, Paragraph>;
-
-	constructor(public key: string, public value?: Paragraph[]){
-		super(key, key.split('\n').map(s => new Paragraph(s)));
+	constructor(
+		public key: string,
+		public value: Paragraph[] = key.split('\n').map(s => new Paragraph(s))) {
+		super(key, value);
 	}
 }
 

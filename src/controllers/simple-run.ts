@@ -1,5 +1,4 @@
-import { Corpus } from '../models';
-import { Word } from '../models';
+import { Parser } from '../models/scanning';
 
 export class SimpleRun {
 	
@@ -9,10 +8,11 @@ export class SimpleRun {
 		 *  2. go through input and assign all possible next values for each node
 		 */
 
-		const corpus = new Corpus(input);
-		corpus.parse();
-		corpus.makeMap(20);
-		corpus.print();
+		const parser = new Parser(input);
+		parser.scan();
+		console.log(parser)
+		// corpus.makeMap(20);
+		// corpus.print();
 		
 	}
 }
