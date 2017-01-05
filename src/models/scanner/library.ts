@@ -1,52 +1,40 @@
-export class Sym<T> extends Map<Symbol, Sym<T>> {
-	static dictionary = new Map();
+export abstract class Token<T> extends Map<symbol, T> {
+	static dictionary: Map<symbol, Token<any>> = new Map();
 
-	static scan(input, splitter: string = '') : any[] {
-		return input.split(splitter).map(Symbol.for).map(s=> {
-			if (!this.dictionary.has(s)) {
-				this.dictionary.set(s, new Sym(Symbol.keyFor(s), s));
-			}	
-			return this.dictionary.get(s);
-		})
+	static scan(input) : any[] {
+		return input.split('').map(Symbol.for);
 	}
 
-	public key: Symbol;
+	public key: symbol;
 
 	constructor(
 		key: string,
-		public value: Sym<T>[] = Sym.scan(key)
+		public value: T[]
 	) { 
 		super();
 
 		const keySymbol = Symbol.for(key);
 
-		if (Sym.dictionary.has(keySymbol)) {
-			return Sym.dictionary.get(keySymbol)
+		if (Token.dictionary.has(keySymbol)) {
+			return Token.dictionary.get(keySymbol)
 		} else {
-			Sym.dictionary.set(keySymbol, key)
+			Token.dictionary.set(keySymbol, this)
 		}
 		
 		this.key = keySymbol;
 
-		this.remap();
-
 	}
 
-	last() {
+	get last() : T {
 		return this.value[this.value.length - 1];
 	}
 
-	protected remap() {
-		this.value.forEach(s => {
-			this.set(s.key, s);
-		})
-	}
 }
 
-export class Word extends Sym<Word> {
-	static dictionary = new Map();
+export class Word extends Token<symbol> {
+	static dictionary: Map<symbol, Word> = new Map();
 
-	static scan(input, splitter: string = ' '): Sym<string>[] {
+	static scan(input, splitter: string = ' '): Word[] {
 		return input.split(splitter).map(Symbol.for).map(s=> {
 			if (!this.dictionary.has(s)) {
 				this.dictionary.set(s, new Word(Symbol.keyFor(s)));
@@ -57,24 +45,24 @@ export class Word extends Sym<Word> {
 
 	constructor(
 		key: string,
-		public value: Sym<Symbol>[] = Sym.scan(key)
+		public value: symbol[] = Token.scan(key)
 	) {
 		super(key, value);
 
 		if (Word.dictionary.has(this.key)) {
 			return Word.dictionary.get(this.key)
 		} else {
-			Word.dictionary.set(this.key, key)
+			Word.dictionary.set(this.key, this)
 		}
 
 	}
 
 }
 
-export class Phrase extends Sym<Phrase> {
-	static dictionary = new Map();
+export class Phrase extends Token<Word> {
+	static dictionary: Map<symbol, Phrase> = new Map();
 
-	static scan(input, splitter: string = '.'): Sym<Phrase>[] {
+	static scan(input, splitter: string = '.'): Phrase[] {
 		return input.split(splitter).map(Symbol.for).map(s=> {
 			if (!this.dictionary.has(s)) {
 				this.dictionary.set(s, new Phrase(Symbol.keyFor(s)));
@@ -85,7 +73,7 @@ export class Phrase extends Sym<Phrase> {
 
 	constructor(
 		key: string,
-		public value: Sym<Word>[] = Word.scan(key)
+		public value: Word[] = Word.scan(key)
 	)
 	{
 		super(key, value);
@@ -93,7 +81,7 @@ export class Phrase extends Sym<Phrase> {
 		if (Phrase.dictionary.has(this.key)) {
 			return Phrase.dictionary.get(this.key)
 		} else {
-			Phrase.dictionary.set(this.key, key)
+			Phrase.dictionary.set(this.key, this)
 		}
 	}
 
@@ -101,12 +89,21 @@ export class Phrase extends Sym<Phrase> {
 
 
 export class Sentance extends Phrase {
+	static dictionary: Map<symbol, Sentance> = new Map();
+
 	static parse(input) {
 		const phrases = Phrase.scan(input);
-		const last = phrases.pop();
-		if (last.value[last.value.length - 1].value === '.') {
-			
+		const lastPhrase = phrases.pop();
+
+		const lastChar = lastPhrase.last.last;
+		if (Symbol.for('.') !== lastChar) {
+			console.error('Invalid input - expected Sentance, got Phrase.');
+		} else {
+			phrases.push(lastPhrase)
 		}
+		
+		return phrases;
+
 	}
 
 	constructor(
@@ -119,25 +116,37 @@ export class Sentance extends Phrase {
 			throw Error('Invalid argument; expected Sentance, got a Phrase.');
 		}
 
-		Phrase.dictionary.set(this.key, this);
-		Sentance.dictionary.set(this.key, this);
+		if (Sentance.dictionary.has(this.key)) {
+			return Sentance.dictionary.get(this.key)
+		} else {
+			Sentance.dictionary.set(this.key, this)
+		}
+
 	}
 
 }
 
 
 
-export class Paragraph extends Sym<Paragraph> {
+export class Paragraph extends Token<Sentance> {
+	static dictionary: Map<symbol, Paragraph> = new Map();
+	
 	static parse(input) : Paragraph[] {
 		return input.split('.\n\n').map(s => new Paragraph(s))
 	}
 
 	constructor(
-		public key: string,
+		key: string,
 		public value: Sentance[] = Sentance.parse(key)
 	)
 	{
 		super(key, value);
+
+		if (Paragraph.dictionary.has(this.key)) {
+			return Paragraph.dictionary.get(this.key)
+		} else {
+			Paragraph.dictionary.set(this.key, this)
+		}
 	}
 }
 
