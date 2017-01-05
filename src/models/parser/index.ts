@@ -1,8 +1,6 @@
 export class Sym<T> {
-	static separator: string = ''
-
 	static parse(input) {
-		return input.split(this.separator).map(s => new Sym(s));
+		return input.split('').map(s => new Sym(s));
 	}
 
 	public map: Map<string, T> = new Map();
@@ -29,7 +27,7 @@ export class Word extends Sym<string> {
 
 	constructor(
 		public key: string,
-		public value: string[] = key.split('')
+		public value: string[] = Sym.parse(key)
 	) {
 		super(key, value);
 	}
@@ -87,76 +85,34 @@ export class Parser {
 	private _sentances: Sentance[];
 	private _words: Word[];
 
-	constructor(public input: string) { }
+	constructor(public input: string) { 	}
 	
-	scanAll() {
-		this.corpus.value.forEach(p => {
-			p.value.forEach(s => {
-				s.value.forEach(w => {
-					
-				})
-			})
+	scanFromTop() {
+		this.corpus = this.corpus || new Corpus(this.input);
+		const paragraphs: Paragraph[] = this.scan(Paragraph, this.corpus.value)
+		const sentances: Sentance[] = paragraphs.map(p => {
+			return this.scan(Sentance, p.value);
 		})
+		const words: Word[] = sentances.map(s => {
+			return this.scan(Word, s.value);
+		})
+
+	}
+
+
+	private scan(type, input) {
+		if (type === Corpus) return new Corpus(input);
+
+		if (!Array.isArray(input)) {
+			return type.parse(input);
+		}
+
+		return input;
 	}
 
 	private scanCorpus(input = this.input) {
-		return this.corpus = new Corpus(input);
+		return new Corpus(input);
 	}
-
-	private scanParagraph(input: string | Paragraph[] = this.corpus.value) {
-		if (!Array.isArray(input)) {
-			input = input.split.map(p=> new Paragraph(p))
-		}
-	}
-	
-	// scanCorpus() {
-	// 	return this.corpus = new Corpus(this.input);
-	// }
-
-	scanParagraphs() : Map<string, Paragraph> {
-		if (this.corpus.value.length > this.paragraphs.size) {
-			this.corpus.value.forEach(p => {
-				this.paragraphs.set(p.key, p);
-			})
-		}	
-
-		return this.paragraphs;
-	}
-
-	scanSentances(): Map<string, Sentance>{
-			this.paragraphs.forEach(p => {
-				p.value.forEach(s => {
-					this.sentances.set(s.key, s);
-				})
-			})
-
-		return this.sentances;
-	}
-
-	scanWords() {
-				
-		})
-
-
-		this.sentances.forEach(s => {
-			s.map.forEach(w => {
-				this.words.set(w.key, w);
-			})
-		})
-
-		return this.words;
-	}
-
-	scan() {
-		this.scanCorpus();
-		this.scanParagraphs();
-		this.scanSentances();
-		this.scanWords();
-	}
-
-
-
-
 
 
 }
