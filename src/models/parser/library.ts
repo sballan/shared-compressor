@@ -1,0 +1,75 @@
+export class Sym<T> {
+	static parse(input) {
+		return input.split('').map(s => new Sym(s));
+	}
+
+	public map: Map<string, T> = new Map();
+
+	constructor(
+		public key: string,
+		public value: any[] = []
+	) { 
+		this.remap();
+	}
+
+	protected remap() {
+		this.value.forEach(w => {
+			this.map.set(w.key , w);
+		})
+	}
+
+}
+
+export class Word extends Sym<string> {
+	static parse(input) {
+		return input.split(' ').map(s => new Word(s))
+	}
+
+	constructor(
+		public key: string,
+		public value: string[] = Sym.parse(key)
+	) {
+		super(key, value);
+	}
+
+}
+
+export class Sentance extends Sym<Word> {
+	static parse(input) {
+		return input.split('.').map(s => new Sentance(s))
+	}
+
+	constructor(
+		public key: string,
+		public value: Word[] = Word.parse(key)
+	)
+	{
+		super(key, value);
+	}
+
+}
+
+export class Paragraph extends Sym<Sentance> {
+	static parse(input) : Paragraph[] {
+		return input.split('.\n\n').map(s => new Paragraph(s))
+	}
+
+	constructor(
+		public key: string,
+		public value: Sentance[] = Sentance.parse(key)
+	)
+	{
+		super(key, value);
+	}
+}
+
+export class Corpus extends Sym<Paragraph> {
+
+	constructor(
+		public key: string,
+		public value: Paragraph[] = Paragraph.parse(key)
+	)
+	{
+		super(key, value);
+	}
+}

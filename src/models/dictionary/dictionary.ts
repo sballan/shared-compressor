@@ -16,7 +16,7 @@ export class Dictionary extends Node<Word> {
 		// if first argument is array, then we are adding a chain
 		if (Array.isArray(wordString) && wordString.length > 1) {
 				path = wordString;
-				wordString = wordString.pop();
+				wordString = path.pop();
 		} else if(Array.isArray(wordString)) {
 				wordString = wordString[0];
 				path = [];
@@ -24,7 +24,7 @@ export class Dictionary extends Node<Word> {
 
 		let word = this.getWord(wordString) || new Word(wordString);
 
-		this.addNode(wordString, word, path);
+		return this.addNode(wordString, word, path);
 
 	}
 
