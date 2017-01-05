@@ -1,7 +1,7 @@
-import { Word } from './word';
-import { Node } from '../node'
+import { Node } from './node'
+import { Word } from '../scanner/library';
 
-export class Dictionary extends Node<Word> {
+export class WordNode extends Node<Word> {
 	addNode(key: string, value: Word, path: string[] = []) : Node<Word> {
 		const node = super.addNode(key, value);
 		node.freq++;

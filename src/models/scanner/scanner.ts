@@ -1,14 +1,10 @@
 import { Corpus, Paragraph, Sentance, Word } from './library';
 
-export class Parser {
+export class Scanner {
 	public corpus: Corpus;
 	public paragraphs: Map<string, Paragraph> = new Map();
 	public sentances: Map<string, Sentance> = new Map();
 	public words: Map<string, Word> = new Map();
-
-	private _paragraphs: Paragraph[]	
-	private _sentances: Sentance[];
-	private _words: Word[];
 
 	constructor(public input: string) { 	}
 	

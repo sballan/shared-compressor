@@ -1,9 +1,10 @@
-import { Word, Dictionary } from '../dictionary';
-import { Node } from '../node'
+import { Node } from './node'
+import { WordNode } from './word-node'
+import { Word } from '../scanner/library';
 
-export class PhraseBook extends Node<Word[]> {
+export class PhraseNode extends Node<Word[]> {
 	constructor(
-		public dictionary: Dictionary
+		public wordNode: WordNode
 	) {	super()	}
 
 	private phraseToKey(phraseStrings: string[]) {
@@ -32,7 +33,7 @@ export class PhraseBook extends Node<Word[]> {
 
 		const phraseKey = this.phraseToKey(phraseStrings);
 		const phraseWords: Word[] = phraseStrings.map(p => {
-			return this.dictionary.addWord(p).value
+			return this.wordNode.addWord(p).value
 		})
 
 		this.addNode(phraseKey, phraseWords, path);

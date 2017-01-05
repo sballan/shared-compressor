@@ -34,9 +34,11 @@ export class Word extends Sym<string> {
 
 }
 
-export class Sentance extends Sym<Word> {
+export class Phrase extends Sym<Word> {
 	static parse(input) {
-		return input.split('.').map(s => new Sentance(s))
+		input = input.split('.').map(s => new Sentance(s));
+		return input.length === 1 ? input : new Error("Invalid input, got Phrase should be Sentance")
+		
 	}
 
 	constructor(
@@ -48,6 +50,24 @@ export class Sentance extends Sym<Word> {
 	}
 
 }
+
+
+export class Sentance extends Phrase {
+	static parse(input) {
+		return Word.parse(input);
+	}
+
+	constructor(
+		public key: string,
+		public value: Word[] = Word.parse(key)
+	)
+	{
+		super(key, value);
+	}
+
+}
+
+
 
 export class Paragraph extends Sym<Sentance> {
 	static parse(input) : Paragraph[] {
@@ -63,11 +83,26 @@ export class Paragraph extends Sym<Sentance> {
 	}
 }
 
-export class Corpus extends Sym<Paragraph> {
+export class Exerpt extends Paragraph {
+	static parse(input) : Paragraph[] {
+		return Sentance.parse(input);
+	}
 
 	constructor(
 		public key: string,
-		public value: Paragraph[] = Paragraph.parse(key)
+		public value: Phrase[] = Phrase.parse(key)
+	)
+	{
+		super(key, value);
+	}
+}
+
+
+export class Corpus extends Sym<Exerpt> {
+
+	constructor(
+		public key: string,
+		public value: Exerpt[] = Exerpt.parse(key)
 	)
 	{
 		super(key, value);
