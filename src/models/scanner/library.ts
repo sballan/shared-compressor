@@ -22,17 +22,21 @@ export class Sym<T> extends Map<Symbol, Sym<T>> {
 
 		if (Sym.dictionary.has(keySymbol)) {
 			return Sym.dictionary.get(keySymbol)
+		} else {
+			Sym.dictionary.set(keySymbol, key)
 		}
-
+		
 		this.key = keySymbol;
 
 		this.remap();
 
 	}
 
-	protected remap() {
-		
+	last() {
+		return this.value[this.value.length - 1];
+	}
 
+	protected remap() {
 		this.value.forEach(s => {
 			this.set(s.key, s);
 		})
@@ -56,7 +60,13 @@ export class Word extends Sym<Word> {
 		public value: Sym<Symbol>[] = Sym.scan(key)
 	) {
 		super(key, value);
-		Word.dictionary.set(this.key, this);
+
+		if (Word.dictionary.has(this.key)) {
+			return Word.dictionary.get(this.key)
+		} else {
+			Word.dictionary.set(this.key, key)
+		}
+
 	}
 
 }
@@ -79,7 +89,12 @@ export class Phrase extends Sym<Phrase> {
 	)
 	{
 		super(key, value);
-		Phrase.dictionary.set(this.key, this);
+
+		if (Phrase.dictionary.has(this.key)) {
+			return Phrase.dictionary.get(this.key)
+		} else {
+			Phrase.dictionary.set(this.key, key)
+		}
 	}
 
 }
@@ -87,8 +102,11 @@ export class Phrase extends Sym<Phrase> {
 
 export class Sentance extends Phrase {
 	static parse(input) {
-		const last = Phrase.scan(input);
-
+		const phrases = Phrase.scan(input);
+		const last = phrases.pop();
+		if (last.value[last.value.length - 1].value === '.') {
+			
+		}
 	}
 
 	constructor(
