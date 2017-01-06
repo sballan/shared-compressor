@@ -1,4 +1,4 @@
-import { Parser } from '../models/scanning';
+import { Scanner } from '../models/scanner';
 
 export class SimpleRun {
 	
@@ -8,11 +8,12 @@ export class SimpleRun {
 		 *  2. go through input and assign all possible next values for each node
 		 */
 
-		const parser = new Parser(input);
-		parser.scan();
-		console.log(parser)
+		const parser = new Scanner(input);
+		const output = parser.scanCorpus();
+		console.log(output.value[400].value[5].value[3])
 		// corpus.makeMap(20);
 		// corpus.print();
-		
+		console.log("Finished parsing, size: ", output.size)
+
 	}
 }

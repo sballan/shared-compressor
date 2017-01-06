@@ -29,7 +29,7 @@ export class WordNode extends Node<Word> {
 	}
 
 	getWord(wordString: string): Word {
-		let node = this.map.get(wordString);
+		let node = this.map.get(Symbol.for(wordString));
 		return node ? node.value : undefined;
 	}
 

@@ -1,7 +1,7 @@
 export class Node<T> {
-	public key: string;
+	public key: symbol;
 	public value: T;
-	public map: Map<string, Node<T>> = new Map();
+	public map: Map<symbol, Node<T>> = new Map();
 	public freq: number = 0;
 	public parent: Node<T>;
 
@@ -12,25 +12,26 @@ export class Node<T> {
 	}
 
 	constructor(key?: string, value?: T, parent?: Node<T>) {
-		this.key = key;
+		this.key = Symbol.for(key);
 		this.value = value;  
 		this.parent = parent;
 	}
 
 	addNode(key: string, value: T, path: string[] = []): Node<T> {
+		const keySym = Symbol.for(key)
 		if (path.length > 0) {
 			return this.findNode(path).addNode(key, value);
 		}
-		else if (this.map.has(key)) return this.map.get(key);
+		else if (this.map.has(keySym)) return this.map.get(keySym);
 		else {
-			this.map.set(key, new Node<T>(key, value, this));
-			return this.map.get(key);
+			this.map.set(keySym, new Node<T>(key, value, this));
+			return this.map.get(keySym);
 		}
 	}
 
 	getNode(path: string | string[]) {
 		if (Array.isArray(path)) return this.findNode(path);
-		return this.map.get(path);
+		return this.map.get(Symbol.for(path));
 	}
 
   findNode(path: string[]) : Node<T> {
@@ -39,7 +40,7 @@ export class Node<T> {
     let currentNode: Node<T> = this;   
       
 		for (let i = 0; i < length; i++) {
-			currentNode = map.get(path[i]);
+			currentNode = map.get(Symbol.for(path[i]));
 			map = currentNode ? currentNode.map : undefined;
     } 
       
@@ -47,7 +48,7 @@ export class Node<T> {
 	}
 
 	has(key: string) : boolean {
-		return this.map.has(key);
+		return this.map.has(Symbol.for(key));
 	}
 
 	getDec(path: string[]) : Node<T>[] {

@@ -31,7 +31,7 @@ export class Scanner {
 		return input;
 	}
 
-	private scanCorpus(input = this.input) {
+	scanCorpus(input = this.input) {
 		return new Corpus(input);
 	}
 

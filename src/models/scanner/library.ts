@@ -1,4 +1,4 @@
-export abstract class Token<T> extends Map<symbol, T[]> {
+export abstract class Token<T> extends Map<symbol, T> {
 	static dictionary: Map<symbol, Token<any>> = new Map();
 
 	static scan(input) : any[] {
@@ -25,26 +25,17 @@ export abstract class Token<T> extends Map<symbol, T[]> {
 
 	}
 
+
+	getToken(key: string) : T {
+		return this.get(Symbol.for(key));
+	}
+
 	get first() : T {
 		return this.value[0];
 	}
 
-	tokenAt() {
-		
-	}
-
 	get last() : T {
 		return this.value[this.value.length - 1];
-	}
-
-	remap() {
-		this.value.forEach(t => {
-			if (this.has(t)) {
-				return this.get(this.key)
-			} else {
-				this.set(this.key, t)
-			}
-		})
 	}
 
 }
@@ -53,7 +44,7 @@ export class Char extends Token<symbol> {
 	static dictionary: Map<symbol, Char> = new Map();
 
 	static scan(input): Char[] {
-		return input.split(" ").map(Symbol.for).map(s=> {
+		return Token.scan(input).map(s=> {
 			if (!this.dictionary.has(s)) {
 				this.dictionary.set(s, new Char(Symbol.keyFor(s)));
 			}	
@@ -174,16 +165,21 @@ export class Sentance extends Phrase {
 
 
 
-export class Paragraph extends Token<Sentance> {
+export class Paragraph extends Token<Phrase> {
 	static dictionary: Map<symbol, Paragraph> = new Map();
 	
-	static parse(input) : Paragraph[] {
-		return input.split('.\n\n').map(s => new Paragraph(s))
+	static scan(input): Paragraph[] {
+		return input.split('.\n\n').map(Symbol.for).map(s=> {
+			if (!this.dictionary.has(s)) {
+				this.dictionary.set(s, new Paragraph(Symbol.keyFor(s)));
+			}	
+			return this.dictionary.get(s);
+		})
 	}
 
 	constructor(
 		key: string,
-		public value: Sentance[] = Sentance.parse(key)
+		public value: Phrase[] = Phrase.scan(key)
 	)
 	{
 		super(key, value);
@@ -200,7 +196,7 @@ export class Corpus extends Token<Paragraph> {
 
 	constructor(
 		key: string,
-		public value: Paragraph[] = Paragraph.parse(key)
+		public value: Paragraph[] = Paragraph.scan(key)
 	)
 	{
 		super(key, value);
