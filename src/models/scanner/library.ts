@@ -1,4 +1,4 @@
-export abstract class Token<T> extends Map<symbol, T> {
+export abstract class Token<T> extends Map<symbol, T[]> {
 	static dictionary: Map<symbol, Token<any>> = new Map();
 
 	static scan(input) : any[] {
@@ -25,13 +25,59 @@ export abstract class Token<T> extends Map<symbol, T> {
 
 	}
 
+	get first() : T {
+		return this.value[0];
+	}
+
+	tokenAt() {
+		
+	}
+
 	get last() : T {
 		return this.value[this.value.length - 1];
 	}
 
+	remap() {
+		this.value.forEach(t => {
+			if (this.has(t)) {
+				return this.get(this.key)
+			} else {
+				this.set(this.key, t)
+			}
+		})
+	}
+
 }
 
-export class Word extends Token<symbol> {
+export class Char extends Token<symbol> {
+	static dictionary: Map<symbol, Char> = new Map();
+
+	static scan(input): Char[] {
+		return input.split(" ").map(Symbol.for).map(s=> {
+			if (!this.dictionary.has(s)) {
+				this.dictionary.set(s, new Char(Symbol.keyFor(s)));
+			}	
+			return this.dictionary.get(s);
+		})
+	}
+
+	constructor(
+		key: string,
+		public value: symbol[] = Token.scan(key)
+	) {
+		super(key, value);
+
+		if (Char.dictionary.has(this.key)) {
+			return Char.dictionary.get(this.key)
+		} else {
+			Char.dictionary.set(this.key, this)
+		}
+
+	}
+
+}
+
+export class Word extends Token<Char> {
 	static dictionary: Map<symbol, Word> = new Map();
 
 	static scan(input, splitter: string = ' '): Word[] {
@@ -45,7 +91,7 @@ export class Word extends Token<symbol> {
 
 	constructor(
 		key: string,
-		public value: symbol[] = Token.scan(key)
+		public value: Char[] = Token.scan(key)
 	) {
 		super(key, value);
 
@@ -96,7 +142,7 @@ export class Sentance extends Phrase {
 		const lastPhrase = phrases.pop();
 
 		const lastChar = lastPhrase.last.last;
-		if (Symbol.for('.') !== lastChar) {
+		if (Symbol.for('.') !== lastChar.key) {
 			console.error('Invalid input - expected Sentance, got Phrase.');
 		} else {
 			phrases.push(lastPhrase)
@@ -150,26 +196,11 @@ export class Paragraph extends Token<Sentance> {
 	}
 }
 
-export class Exerpt extends Paragraph {
-	static parse(input) : Paragraph[] {
-		return Sentance.parse(input);
-	}
+export class Corpus extends Token<Paragraph> {
 
 	constructor(
-		public key: string,
-		public value: Phrase[] = Phrase.parse(key)
-	)
-	{
-		super(key, value);
-	}
-}
-
-
-export class Corpus extends Sym<Exerpt> {
-
-	constructor(
-		public key: string,
-		public value: Exerpt[] = Exerpt.parse(key)
+		key: string,
+		public value: Paragraph[] = Paragraph.parse(key)
 	)
 	{
 		super(key, value);
