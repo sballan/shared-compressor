@@ -1,7 +1,7 @@
-export abstract class Token<T> extends Map<symbol, T> { 
-	static dictionary: Map<symbol, Token<any>> = new Map();
+export abstract class Token extends Symbol { 
+	static dictionary: Map<symbol, symbol> = new Map();
 
-	static scan(input, split: string = '') : any[] {
+	static scan(input, split: string = '') : symbol[] {
 		return input.split(split).map(Symbol.for);
 	}
 
@@ -9,7 +9,7 @@ export abstract class Token<T> extends Map<symbol, T> {
 
 	constructor(
 		key: string,
-		public value: T[]
+		public value: symbol[]
 	) { 
 		super();
 
@@ -18,15 +18,17 @@ export abstract class Token<T> extends Map<symbol, T> {
 		if (Token.dictionary.has(keySymbol)) {
 			return Token.dictionary.get(keySymbol)
 		} else {
-			Token.dictionary.set(keySymbol, this)
+			Token.dictionary.set(keySymbol, key)
 		}
 		
 		this.key = keySymbol;
 
 	}
 
-	strip() {
-		delete this.dictionary;
+	toString() {
+		return this.value.map(v => {
+			return Symbol.keyFor(v);
+		})
 	}
 
 
@@ -45,7 +47,57 @@ export abstract class Token<T> extends Map<symbol, T> {
 }
 	
 
-export class Char extends Token<symbol> {
+
+export abstract class Token2 extends Map<symbol, symbol> { 
+	static dictionary: Map<symbol, symbol> = new Map();
+
+	static scan(input, split: string = '') : any[] {
+		return input.split(split).map(Symbol.for);
+	}
+
+	public key: symbol;
+
+	constructor(
+		key: string,
+		public value: symbol[]
+	) { 
+		super();
+
+		const keySymbol = Symbol.for(key);
+
+		if (Token.dictionary.has(keySymbol)) {
+			return Token.dictionary.get(keySymbol)
+		} else {
+			Token.dictionary.set(keySymbol, keySymbol)
+		}
+		
+		this.key = keySymbol;
+
+	}
+
+	toString() {
+		return this.value.map(v => {
+			return Symbol.keyFor(v);
+		})
+	}
+
+
+	getToken(key: string) : T {
+		return this.get(Symbol.for(key));
+	}
+
+	get first() : T {
+		return this.value[0];
+	}
+
+	get last() : T {
+		return this.value[this.value.length - 1];
+	}
+
+}
+	
+
+export class Char extends Token {
 	constructor(
 		key: string,
 		public value: symbol[] = Token.scan(key)
@@ -55,43 +107,37 @@ export class Char extends Token<symbol> {
 		if (Char.dictionary.has(this.key)) {
 			return Char.dictionary.get(this.key)
 		} else {
-			Char.dictionary.set(this.key, this)
+			Char.dictionary.set(this.key, value)
 		}
 
 	}
 
-	static dictionary: Map<symbol, Char> = new Map();
+	static dictionary: Map<symbol, symbol> = new Map();
 
-	static scan(input): Char[] {
-		return Token.scan(input).map(s=> {
-			if (!this.dictionary.has(s)) {
-				this.dictionary.set(s, new Char(Symbol.keyFor(s)));
-			}	
-			return this.dictionary.get(s);
-		})
+	static scan(input): symbol[] {
+		return super.scan(input)
 	}
 
 }
 
-export class Word extends Token<Char> {
-
+export class Word extends Token {
 	constructor(
 		key: string,
-		public value: Char[] = Token.scan(key)
+		public value: symbol[] = Token.scan(key)
 	) {
 		super(key, value);
 
 		if (Word.dictionary.has(this.key)) {
 			return Word.dictionary.get(this.key)
 		} else {
-			Word.dictionary.set(this.key, this)
+			Word.dictionary.set(this.key, value)
 		}
 
 	}
 
-	static dictionary: Map<symbol, Word> = new Map();
+	static dictionary: Map<symbol, symbol[]> = new Map();
 
-	static scan(input, splitter: string = ' '): Word[] {
+	static scan(input, splitter: string = ' '): symbol[] {
 		return input.split(splitter).map(Symbol.for).map(s=> {
 			if (!this.dictionary.has(s)) {
 				this.dictionary.set(s, new Word(Symbol.keyFor(s)));
@@ -103,7 +149,7 @@ export class Word extends Token<Char> {
 }
 
 export class Phrase extends Token<Word> {
-	static dictionary: Map<symbol, Phrase> = new Map();
+	static dictionary: Map<symbol, symbol> = new Map();
 
 	static scan(input, splitter: string = '.'): Phrase[] {
 		return input.split(splitter).map(Symbol.for).map(s=> {
@@ -116,7 +162,7 @@ export class Phrase extends Token<Word> {
 
 	constructor(
 		key: string,
-		public value: Word[] = Word.scan(key)
+		public value: symbol[] = Word.scan(key)
 	)
 	{
 		super(key, value);
@@ -130,7 +176,7 @@ export class Phrase extends Token<Word> {
 
 }
 
-
+/**
 export class Sentance extends Phrase {
 	static dictionary: Map<symbol, Sentance> = new Map();
 
@@ -168,13 +214,14 @@ export class Sentance extends Phrase {
 	}
 
 }
+*/
 
 
 
-export class Paragraph extends Token<Phrase> {
-	static dictionary: Map<symbol, Paragraph> = new Map();
+export class Paragraph extends Token{
+	static dictionary: Map<symbol, symbol> = new Map();
 	
-	static scan(input): Paragraph[] {
+	static scan(input): smybol[] {
 		return input.split('.\n\n').map(Symbol.for).map(s=> {
 			if (!this.dictionary.has(s)) {
 				this.dictionary.set(s, new Paragraph(Symbol.keyFor(s)));
@@ -198,11 +245,11 @@ export class Paragraph extends Token<Phrase> {
 	}
 }
 
-export class Corpus extends Token<Paragraph> {
+export class Corpus extends Token {
 
 	constructor(
 		key: string,
-		public value: Paragraph[] = Paragraph.scan(key)
+		public value: symbol[] = Paragraph.scan(key)
 	)
 	{
 		super(key, value);
