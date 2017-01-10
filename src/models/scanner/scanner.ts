@@ -1,4 +1,4 @@
-import { Corpus, Paragraph, Sentance, Word } from './library';
+import { Corpus, Paragraph, Sentance, Word } from './tokens';
 
 export class Scanner {
 	public corpus: Corpus;

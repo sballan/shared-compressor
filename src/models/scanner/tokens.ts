@@ -1,8 +1,8 @@
-export abstract class Token<T> extends Map<symbol, T> {
+export abstract class Token<T> extends Map<symbol, T> { 
 	static dictionary: Map<symbol, Token<any>> = new Map();
 
-	static scan(input) : any[] {
-		return input.split('').map(Symbol.for);
+	static scan(input, split: string = '') : any[] {
+		return input.split(split).map(Symbol.for);
 	}
 
 	public key: symbol;
@@ -25,6 +25,10 @@ export abstract class Token<T> extends Map<symbol, T> {
 
 	}
 
+	strip() {
+		delete this.dictionary;
+	}
+
 
 	getToken(key: string) : T {
 		return this.get(Symbol.for(key));
@@ -39,19 +43,9 @@ export abstract class Token<T> extends Map<symbol, T> {
 	}
 
 }
+	
 
 export class Char extends Token<symbol> {
-	static dictionary: Map<symbol, Char> = new Map();
-
-	static scan(input): Char[] {
-		return Token.scan(input).map(s=> {
-			if (!this.dictionary.has(s)) {
-				this.dictionary.set(s, new Char(Symbol.keyFor(s)));
-			}	
-			return this.dictionary.get(s);
-		})
-	}
-
 	constructor(
 		key: string,
 		public value: symbol[] = Token.scan(key)
@@ -66,19 +60,20 @@ export class Char extends Token<symbol> {
 
 	}
 
-}
+	static dictionary: Map<symbol, Char> = new Map();
 
-export class Word extends Token<Char> {
-	static dictionary: Map<symbol, Word> = new Map();
-
-	static scan(input, splitter: string = ' '): Word[] {
-		return input.split(splitter).map(Symbol.for).map(s=> {
+	static scan(input): Char[] {
+		return Token.scan(input).map(s=> {
 			if (!this.dictionary.has(s)) {
-				this.dictionary.set(s, new Word(Symbol.keyFor(s)));
+				this.dictionary.set(s, new Char(Symbol.keyFor(s)));
 			}	
 			return this.dictionary.get(s);
 		})
 	}
+
+}
+
+export class Word extends Token<Char> {
 
 	constructor(
 		key: string,
@@ -92,6 +87,17 @@ export class Word extends Token<Char> {
 			Word.dictionary.set(this.key, this)
 		}
 
+	}
+
+	static dictionary: Map<symbol, Word> = new Map();
+
+	static scan(input, splitter: string = ' '): Word[] {
+		return input.split(splitter).map(Symbol.for).map(s=> {
+			if (!this.dictionary.has(s)) {
+				this.dictionary.set(s, new Word(Symbol.keyFor(s)));
+			}	
+			return this.dictionary.get(s);
+		})
 	}
 
 }
