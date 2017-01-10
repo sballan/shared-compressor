@@ -1,168 +1,74 @@
-export abstract class Token extends Symbol { 
-	static dictionary: Map<symbol, symbol> = new Map();
+export class Sym {
+	public key: symbol;
+	public value: any;
+}
 
-	static scan(input, split: string = '') : symbol[] {
-		return input.split(split).map(Symbol.for);
-	}
+export class Terminal extends Sym {
+	public key: symbol;
+	public value: string;
+}
 
+export class Nonterminal extends Sym {
+	public key: symbol;
+	public value: Sym[];
+}
+
+export class Token { 
 	public key: symbol;
 
 	constructor(
 		key: string,
 		public value: symbol[]
 	) { 
-		super();
-
 		const keySymbol = Symbol.for(key);
-
-		if (Token.dictionary.has(keySymbol)) {
-			return Token.dictionary.get(keySymbol)
-		} else {
-			Token.dictionary.set(keySymbol, key)
-		}
-		
 		this.key = keySymbol;
 
+		if (Token.dictionary.has(this.key)) {
+			return Token.dictionary.get(this.key)
+		} else {
+			Token.dictionary.set(this.key, this)
+		}
+
+	}
+
+	protected get splitChar() {
+		return Token.splitter;
 	}
 
 	toString() {
 		return this.value.map(v => {
 			return Symbol.keyFor(v);
-		})
+		}).join(this.splitChar)
 	}
 
+	static dictionary: Map<symbol, Token> = new Map();
+	static splitter: string = '';
 
-	getToken(key: string) : T {
-		return this.get(Symbol.for(key));
-	}
-
-	get first() : T {
-		return this.value[0];
-	}
-
-	get last() : T {
-		return this.value[this.value.length - 1];
-	}
-
-}
-	
-
-
-export abstract class Token2 extends Map<symbol, symbol> { 
-	static dictionary: Map<symbol, symbol> = new Map();
-
-	static scan(input, split: string = '') : any[] {
+	static scan(input, split: string = this.splitter) : symbol[] {
 		return input.split(split).map(Symbol.for);
 	}
-
-	public key: symbol;
-
-	constructor(
-		key: string,
-		public value: symbol[]
-	) { 
-		super();
-
-		const keySymbol = Symbol.for(key);
-
-		if (Token.dictionary.has(keySymbol)) {
-			return Token.dictionary.get(keySymbol)
-		} else {
-			Token.dictionary.set(keySymbol, keySymbol)
-		}
-		
-		this.key = keySymbol;
-
-	}
-
-	toString() {
-		return this.value.map(v => {
-			return Symbol.keyFor(v);
-		})
-	}
-
-
-	getToken(key: string) : T {
-		return this.get(Symbol.for(key));
-	}
-
-	get first() : T {
-		return this.value[0];
-	}
-
-	get last() : T {
-		return this.value[this.value.length - 1];
-	}
-
 }
 	
-
-export class Char extends Token {
-	constructor(
-		key: string,
-		public value: symbol[] = Token.scan(key)
-	) {
-		super(key, value);
-
-		if (Char.dictionary.has(this.key)) {
-			return Char.dictionary.get(this.key)
-		} else {
-			Char.dictionary.set(this.key, value)
-		}
-
-	}
-
-	static dictionary: Map<symbol, symbol> = new Map();
-
-	static scan(input): symbol[] {
-		return super.scan(input)
-	}
-
-}
 
 export class Word extends Token {
 	constructor(
 		key: string,
-		public value: symbol[] = Token.scan(key)
+		public value: symbol[] = Token.scan(key, Token.splitter)
 	) {
 		super(key, value);
-
-		if (Word.dictionary.has(this.key)) {
-			return Word.dictionary.get(this.key)
-		} else {
-			Word.dictionary.set(this.key, value)
-		}
-
 	}
 
-	static dictionary: Map<symbol, symbol[]> = new Map();
-
-	static scan(input, splitter: string = ' '): symbol[] {
-		return input.split(splitter).map(Symbol.for).map(s=> {
-			if (!this.dictionary.has(s)) {
-				this.dictionary.set(s, new Word(Symbol.keyFor(s)));
-			}	
-			return this.dictionary.get(s);
-		})
+	protected get splitChar() {
+		return Word.splitter;
 	}
 
+	static splitter: string = ' ';
 }
 
-export class Phrase extends Token<Word> {
-	static dictionary: Map<symbol, symbol> = new Map();
-
-	static scan(input, splitter: string = '.'): Phrase[] {
-		return input.split(splitter).map(Symbol.for).map(s=> {
-			if (!this.dictionary.has(s)) {
-				this.dictionary.set(s, new Phrase(Symbol.keyFor(s)));
-			}	
-			return this.dictionary.get(s);
-		})
-	}
-
+export class Phrase extends Token {
 	constructor(
 		key: string,
-		public value: symbol[] = Word.scan(key)
+		public value: symbol[] = Token.scan(key, ' ')
 	)
 	{
 		super(key, value);
