@@ -44,6 +44,7 @@ export class Nonterminal extends Sym {
 export class Parser {
 	constructor(public input: string) { }
 	
+	// Should really make them nodes, in order to keep track of how many.  If it appears less than twice, it's not useful.
 	scan(depth: number = 1) {
 		for (let i = 0; i < this.input.length; i++) {
 			const terminal = new Terminal(Symbol.for(this.input[i]), this.input[i]);

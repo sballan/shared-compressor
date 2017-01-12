@@ -15,6 +15,7 @@ export class Nonterminal extends Sym {
 
 export class Token { 
 	public key: symbol;
+	public cache: Token[];
 
 	constructor(
 		key: string,
@@ -29,6 +30,24 @@ export class Token {
 			Token.dictionary.set(this.key, this)
 		}
 
+		this.build();
+
+	}
+
+	purge() {
+		this.cache.forEach(t => t.purge());
+		this.cache = [];
+	}
+
+	build() {
+		if (this.cache.length === 0) {	
+			this.value.forEach(s => {
+				let t = Token.dictionary.get(s);
+				this.cache.push(t);
+				t.build();
+			})
+		}
+		this.cache.reverse();
 	}
 
 	protected get splitChar() {
@@ -63,6 +82,7 @@ export class Word extends Token {
 	}
 
 	static splitter: string = ' ';
+	
 }
 
 export class Phrase extends Token {
