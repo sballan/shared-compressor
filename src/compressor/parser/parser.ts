@@ -3,16 +3,16 @@ import { Corpus, Scanner, Word, Token } from './scanner'
 import { WordNode } from './word-node';
 
 export class Parser {
-	public corpus: Corpus
+	// public corpus: Corpus
 	public dictionary: WordNode = new WordNode();
 
 	constructor(
 		public input: string,
-		public scanner: Scanner = new Scanner(input)
+		public scanner: Scanner = new Scanner(input),
+		public corpus: Corpus = scanner.scanCorpus(input)
 	) {	}
 
 	scan() {
-		this.corpus = this.scanner.scanCorpus(this.input);
 		this.corpus.build();
 	}
 
