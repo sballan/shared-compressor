@@ -5,20 +5,128 @@ const redis = require('redis');
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
+
+
+export class rMap {
+	constructor(private client, public name) { }
+
+	setKey(value: string, key: string ) {
+		return this.client.hmsetAsync([`${this.name}:key`, value, `${this.name}:${key}`])
+	}
+
+	setVal(key: string, value: string) {
+		return this.client.hmsetAsync([`${this.name}:value`, `${this.name}:${key}`, value])
+	}
+
+	set(key: string, value: string) {
+		return this.setVal(key, value)
+			.then(res => this.setKey(value, key));
+	}
+
+	getVal( key: string) : bluebird<string> {
+		return this.client.hmgetAsync([`${this.name}:key`, `${this.name}:${key}`])
+	}
+
+	getKey(value: string) : bluebird<string> {
+		return this.client.hmgetAsync([`${this.name}:value`, `${this.name}:${value}`])
+	}
+
+	get( key: string) : bluebird<string> {
+		return this.getVal(key)
+	}
+
+}
+
+export class rCache {
+	public counter: string = '0';
+	private map: rMap;
+
+	constructor(private client, public name: string) { }
+	
+	incrCounter(): bluebird<number> {
+		return this.client.incrAsync(this.name)
+			.then(res => this.counter = res)
+	}
+
+	createKey(value: string) {
+		return this.map.getKey(value)
+		.then(res => {
+				if (res) return String(res);
+				else return String(this.incrCounter());
+			})
+	}
+
+	setKey(value: string, key: string) {
+		return this.map.setKey(value, key)
+	}
+
+	setVal(key: string, value: string) {
+		return this.map.setVal(key, value)
+	}
+
+	set(key: string, value: string) {
+		return this.setVal(key, value)
+			.then(res => this.setKey(value, key));
+	}
+
+	getVal(key: string) : bluebird<string> {
+		return this.map.getVal(key);
+	}
+
+	getKey(key: string) : bluebird<string> {
+		return this.map.getKey(key);
+	}
+
+	
+}
+
+export class rKey {
+	private static tCreate(value: string): bluebird<string> {
+		let key;
+		return this.createKey('t', value)
+			.then(res => {
+				key = res;
+				return this.tMap.set(res, value)
+			})
+			.then(res => key);
+	}
+
+	private static nCreate(value: string) {
+		return this.createKey('t', value)
+			.then(res => {
+				const vArr = value.split('');
+				return bluebird.map(vArr, this.tCreate.bind(this))
+			})
+			.then(res => {
+				return res.join('');
+			}) 
+
+
+	}
+	
+
+	public static createKey(name: string, value: string) : bluebird<string> {
+		return this[`${name}Map`].getKey(value)
+			.then(res => {
+					if (res) return res;
+					else return this.incrCounter(name);
+				})
+	}
+	
+}
+
+
 export class Manager {
-	// ID counters for terminals and nonterminals.
-	public tCounter: string = '0';
-	public nCounter: string = '0';
+	public cache = new rCache(this.client)
+
 	constructor(public client) { }
 
 	// counter will either be created or incremented
-	private incrCounter(key: string) : bluebird<string> {
-		return this.client.incrAsync(key)
-			.then(res => this[key] = String(res))
-	}
+	
 
-	private setMapKey(name: string, value: string, key: string ) {
-		return this.client.hmsetAsync([`${name}:key`, value, `${name}:${key}`])
+	private setMapKey(name: string, value: string, key: string) {
+		return this[`${name}Map`].setMapKey(value, key)
+		// return this.client.hmsetAsync([`${name}:key`, value, `${name}:${key}`])
 	}
 
 	private setMapVal(name: string, key: string, value: string) {
@@ -27,9 +135,7 @@ export class Manager {
 
 	private setMap(name: string, key: string, value: string) {
 		return this.setMapVal(name, key, value)
-			.then(res => {
-				return this.setMapKey(name, value, key)
-			})
+			.then(res => this.setMapKey(name, value, key));
 	}
 
 	private getMapVal(name: string, key: string) : bluebird<string> {
@@ -40,21 +146,20 @@ export class Manager {
 		return this.client.hmgetAsync([`${name}:value`, `${name}:${value}`])
 	}
 
+	createKey(name: string, value: string) : bluebird<string> {
+		return this.getMapKey(name, value)
+			.then(res => {
+					if (res) return res;
+					else return this.incrCounter(name);
+				})
+	}
+
 	init() {
 		return this.incrCounter('tCounter')
 			.then(res => this.incrCounter('nCounter'))
 	}
 
 
-	create(name: string, value: string) {
-		return this.incrCounter(value)
-			.then(res => {
-				return this.setMap(name, res, value);
-			})
-	}
-
-	tCreate(value: string) { return this.create('t', value); }
-	nCreate(value: string) { return this.create('n', value); }
 
 	tGetKey(value: string) : bluebird<string> { return this.getMapKey('t', value); }
 	tGetVal(key: string) : bluebird<string> { return this.getMapVal('t', key); }
@@ -111,72 +216,72 @@ export class Manager {
 
 }
 
-// export abstract class r {
-// 	public get key() { return `${r.classKey}:${this._key}` }
-// 	public value: any;
+export abstract class r {
+	public get key() { return `${r.classKey}:${this._key}` }
+	public value: any;
 
-// 	constructor(
-// 			public client,
-// 			protected _key: string
-// 	) {}
+	constructor(
+			public client,
+			protected _key: string
+	) {}
 
-// 	abstract init();
+	abstract init();
 	
-// 	static classKey: string = '';
+	static classKey: string = '';
 
-// }
+}
 
-// export class Key extends r {
-// 	protected _key: string;
-// 	public get key() { return `${this._key}` }
+export class Key extends r {
+	protected _key: string;
+	public get key() { return `${this._key}` }
 
-// 	constructor(
-// 		client,
-// 		key: string,
-// 		public value: string
-// 	) {
-// 		super(client, key);
-// 	}
+	constructor(
+		client,
+		key: string,
+		public value: string
+	) {
+		super(client, key);
+	}
 	
-// 	init() {
-// 		return this.client.hmset(Key.classKey, this.key, this.value);
-// 	}
+	init() {
+		return this.client.hmset(Key.classKey, this.key, this.value);
+	}
 
-// 	static classKey: string = 'key';
+	static classKey: string = 'key';
 
-// }
+}
 
-// export class rList extends r {
-//     protected _key: string;
-//     public get key() { return `${rList.classKey}:${this._key}` }
-//     public value = [];
+export class rList extends r {
+    protected _key: string;
+    public get key() { return `${rList.classKey}:${this._key}` }
+    public value = [];
 
-//     push(values: string[]) : bluebird<number>{
-//         this.value.push(...values);
-//         return this.client.rpushAsync([this.key, ...values]) as bluebird<number>
-//     }
+    push(values: string[]) : bluebird<number>{
+        this.value.push(...values);
+        return this.client.rpushAsync([this.key, ...values]) as bluebird<number>
+    }
 
-//     pop() : bluebird<string> {
-// 			this.value.pop();
-// 			return this.client.rpopAsync(this.key) as bluebird<string>
-//     }
+    pop() : bluebird<string> {
+			this.value.pop();
+			return this.client.rpopAsync(this.key) as bluebird<string>
+    }
 
-//     unshift(values: string[]) : bluebird<number>{
-//         this.value.push(...values);
-//         return this.client.lpushAsync(values) as bluebird<number>
-//     }
+    unshift(values: string[]) : bluebird<number>{
+        this.value.push(...values);
+        return this.client.lpushAsync(values) as bluebird<number>
+    }
 
-//     shift() : bluebird<string> {
-//         this.value.pop();
-//         return this.client.rpopAsync(this.key) as bluebird<string>
-// 		}
+    shift() : bluebird<string> {
+        this.value.pop();
+        return this.client.rpopAsync(this.key) as bluebird<string>
+		}
 	
-// 		init() {
-// 			return this.client.hmset(['key:list', this.key, ...this.value]);
-// 		}
+		init() {
+			return this.client.hmset(['key:list', this.key, ...this.value]);
+		}
     
-//     static classKey: string = 'list';
-// }
+    static classKey: string = 'list';
+}
 
 // export class rMap extends r {
 // 	protected _key: string;
