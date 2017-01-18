@@ -1,4 +1,4 @@
-import { Corpus, Paragraph, Sentance, Word } from './tokens';
+import { Corpus, Paragraph, Sentance, Token, Word } from './tokens';
 
 export class Scanner {
 	public corpus: Corpus;
@@ -33,6 +33,10 @@ export class Scanner {
 
 	scanCorpus(input = this.input) {
 		return new Corpus(input);
+	}
+
+	scanTokens(input = this.input) {
+		return Token.scan(input);
 	}
 
 

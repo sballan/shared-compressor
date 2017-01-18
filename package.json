@@ -11,10 +11,17 @@
     "browserify": "browserify ./dist/js/start.js -o ./dist/bundle.js"
   },
   "dependencies": {
+    "@types/bluebird": "^3.0.37",
     "@types/lodash": "^4.14.44",
     "@types/node": "^6.0.52",
+    "@types/redis": "^0.12.34",
+    "bluebird": "^3.4.7",
     "jasmine": "^2.5.2",
     "lodash": "^4.17.2",
+    "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
+    "redis": "^2.6.4",
+    "sequelize": "^3.29.0",
     "tsc": "^1.20150623.0",
     "typescript": "^2.0.10"
   },

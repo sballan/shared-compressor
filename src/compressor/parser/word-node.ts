@@ -1,8 +1,8 @@
 import { Node } from './node'
-import { Word } from '../scanner/library';
+import { Word, Token } from './scanner/tokens';
 
-export class WordNode extends Node<Word> {
-	addNode(key: string, value: Word, path: string[] = []) : Node<Word> {
+export class WordNode extends Node<Token> {
+	addNode(key: string, value: Token, path: string[] = []) : Node<Token> {
 		const node = super.addNode(key, value);
 		node.freq++;
 
@@ -17,7 +17,7 @@ export class WordNode extends Node<Word> {
 		if (Array.isArray(wordString) && wordString.length > 1) {
 				path = wordString;
 				wordString = path.pop();
-		} else if(Array.isArray(wordString)) {
+		} else if(Array.isArray(wordString)) {  
 				wordString = wordString[0];
 				path = [];
 		}
