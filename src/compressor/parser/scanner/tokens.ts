@@ -1,28 +1,35 @@
+// A Sym is a uniqye key-value pair
 export class Sym {
 	public key: symbol;
 	public value: any;
+
+	constructor() {
+			if (Sym.dictionary.has(this.key)) {
+			return Sym.dictionary.get(this.key)
+		} else {
+			Sym.dictionary.set(this.key, this)
+		}
+	}
+
+	static dictionary: WeakMap<symbol, Sym> = new WeakMap();
 }
 
-export class Terminal extends Sym {
-	public key: symbol;
-	public value: string;
-}
+// A Terminal is a Sym with a string for it's value
+export class Terminal extends Sym { public value: string; }
 
-export class Nonterminal extends Sym {
-	public key: symbol;
-	public value: Sym[];
-}
+// A Nonterminal is a Sym with a Sym[] for it's value
+export class Nonterminal extends Sym { public value: Sym[]; }
 
-export class Token { 
-	public key: symbol;
-	public cache: Token[];
+// Tokens are Syms with a value that is a Sym[] with no Tokens.  Tokens also have a cache, so they are printable;
+export class Token extends Sym { 
+	public cache: string;
 
 	constructor(
 		key: string,
 		public value: Sym[]
 	) { 
-		const keySymbol = Symbol.for(key);
-		this.key = keySymbol;
+		super();
+		this.key = Symbol.for(key);
 
 		if (Token.dictionary.has(this.key)) {
 			return Token.dictionary.get(this.key)
@@ -34,34 +41,35 @@ export class Token {
 
 	}
 
-	purge() {
-		this.cache.forEach(t => t.purge());
-		this.cache = [];
-	}
+	toString() { return this.build(); }
 
-	build() {
-		if (this.cache.length === 0) {	
-			this.value.forEach(s => {
-				let t = Token.dictionary.get(s);
-				this.cache.push(t);
-				t.build();
+	purge() { this.cache = ""; };
+
+	build(value: Sym[] = this.value) {
+		if (this.cache) return this.cache;
+
+		let finished: boolean = false;
+		let newVals: Sym[] = [];
+
+		while (!finished) {	
+			finished = true;
+			value.forEach(s => {
+				if (s instanceof Token) {
+					finished = true;
+					throw new Error('Tokens cannot have tokens as values')
+				} else if (s instanceof Nonterminal) {
+					finished = false;
+					newVals.push(...s.value)
+				} else if (s instanceof Terminal) {
+					newVals.push(s)
+				}
 			})
+			value = newVals;
 		}
-		this.cache.reverse();
+		return this.cache = newVals.map(v=> v.value).join('')
 	}
 
-	protected get splitChar() {
-		return Token.splitter;
-	}
-
-	toString() {
-		return this.value.map(v => {
-			return Symbol.keyFor(v);
-		}).join(this.splitChar)
-	}
-
-	static dictionary: Map<symbol, Token> = new Map();
-	static splitter: string = '';
+	static dictionary: WeakMap<symbol, Token> = new WeakMap();
 
 	static scan(input, split: string = this.splitter) : symbol[] {
 		return input.split(split).map(Symbol.for);
