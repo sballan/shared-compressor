@@ -28,31 +28,13 @@ export class Terminal extends Sym {
 // A Nonterminal is a Sym with a Sym[] for it's value
 export class Nonterminal extends Sym {
 	public value: Terminal[];
-	public cache: Terminal[];
+	public cache: string;
 
 	build(value: Sym[] = this.value) {
-		if (this.cache) return this.cache;
-
-		let finished: boolean = false;
-		let newVals: Sym[] = [];
-
-		while (!finished) {	
-			finished = true;
-			value.forEach(s => {
-				if (s instanceof Token) {
-					finished = true;
-					throw new Error('Nonterminals cannot have tokens as values')
-				} else if (s instanceof Nonterminal) {
-					finished = false;
-					newVals.push(...s.value)
-				} else if (s instanceof Terminal) {
-					newVals.push(s)
-				}
-			})
-			value = newVals;
+		if (!this.cache) {
+			this.cache = value.map(v => v.value).join('');
 		}
-		// all terminals
-		return this.cache = newVals;
+		return this.cache;
 	}
 }
 
@@ -90,12 +72,10 @@ export class Token extends Sym {
 			finished = true;
 			value.forEach(s => {
 				if (s instanceof Token) {
-					finished = true;
-					throw new Error('Tokens cannot have tokens as values')
-				} else if (s instanceof Nonterminal) {
 					finished = false;
 					newVals.push(...s.value)
-				} else if (s instanceof Terminal) {
+				} else if (s instanceof Nonterminal
+					|| s instanceof Terminal) {
 					newVals.push(s)
 				}
 			})
