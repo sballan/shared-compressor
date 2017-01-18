@@ -1,5 +1,5 @@
-import { Corpus, Paragraph, Token, Word, Terminal, Nonterminal } from './tokens';
-import { Manager } from '../../../redis-manager'
+import { Token,  Terminal, Nonterminal } from '../syms';
+import { Manager } from '../../redis-manager'
 
 export class Scanner {
 	public terminals: Map<symbol, Terminal> = new Map();

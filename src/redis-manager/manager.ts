@@ -1,6 +1,6 @@
 import * as bluebird from 'bluebird';
-import RedisCache from './redis-cache';
-import { Sym, Token, Terminal, Nonterminal } from '../compressor/scanner';
+import { RedisCache } from './redis-cache';
+import { Sym, Token, Terminal, Nonterminal } from '../compressor/syms';
 
 export class Manager {
 	public tCache = new RedisCache(this.client, 't');
@@ -17,8 +17,7 @@ export class Manager {
 	}
 
 	writeNonterm(nonterm: Nonterminal) : bluebird<string> {
-		nonterm.build();
-		return this.writeTerms(nonterm.cache)
+		return this.writeTerms(nonterm.value)
 			.then(res => {
 				return this.nCache.createKey(res.join('t:'))
 			})
@@ -34,7 +33,7 @@ export class Manager {
 			}
 		})
 		.then(res => {
-			bluebird.each(token.)
+			// bluebird.each(token.)
 		})
 	}
 
@@ -67,7 +66,7 @@ export class Manager {
 	}
 
 	lookupTerm(keyTerm: string) : bluebird<string> {
-		return this.tCache.getVal(keyTerm)
+		return this.tCache.get(keyTerm)
 	}
 
 	lookupTerms(keyTerms: string) : bluebird<string> {
@@ -78,7 +77,7 @@ export class Manager {
 	}
 
 	lookupNonterm(keyNonterm: string) : bluebird<string> {
-		return this.nCache.getVal(keyNonterm)
+		return this.nCache.get(keyNonterm)
 			.then(res => this.simplify(res))
 			.then(res =>  this.lookupTerms(res))
 	}

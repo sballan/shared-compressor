@@ -1,4 +1,4 @@
-// A Sym is a uniqye key-value pair
+// A Sym is a unique key-value pair
 export class Sym {
 	public key: symbol;
 	public value: any | any[];
@@ -78,7 +78,7 @@ export class Token extends Sym {
 					|| s instanceof Terminal) {
 					newVals.push(s)
 				}
-			})
+			});
 			value = newVals;
 		}
 		return this.cache = newVals.map(v=> v.value).join('')

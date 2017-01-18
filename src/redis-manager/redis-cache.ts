@@ -1,12 +1,28 @@
 import * as bluebird from 'bluebird';
-import RedisMap from './redis-map';
+import { RedisMap } from './redis-map';
 
-export default class Cache {
+export class RedisCache {
 	public counter: string = '0';
 	private map: RedisMap;
 
 	constructor(private client, public name: string) { }
 	
+	private setKey(value: string, key: string) {
+		return this.map.setKey(value, key)
+	}
+
+	private setVal(key: string, value: string) {
+		return this.map.setVal(key, value)
+	}
+
+	private getVal(key: string) : bluebird<string> {
+		return this.map.getVal(key);
+	}
+
+	private getKey(key: string) : bluebird<string> {
+		return this.map.getKey(key);
+	}
+
 	incrCounter(): bluebird<number> {
 		return this.client.incrAsync(this.name)
 			.then(res => this.counter = res)
@@ -20,12 +36,11 @@ export default class Cache {
 			})
 	}
 
-	setKey(value: string, key: string) {
-		return this.map.setKey(value, key)
-	}
-
-	setVal(key: string, value: string) {
-		return this.map.setVal(key, value)
+	add(value: string) {
+		return this.createKey(value)
+			.then(key => {
+				return this.set(key, value);
+			})
 	}
 
 	set(key: string, value: string) {
@@ -33,13 +48,10 @@ export default class Cache {
 			.then(res => this.setKey(value, key));
 	}
 
-	getVal(key: string) : bluebird<string> {
-		return this.map.getVal(key);
+	get(key) : bluebird<string> {
+		return this.getVal(key);
 	}
 
-	getKey(key: string) : bluebird<string> {
-		return this.map.getKey(key);
-	}
 
 	
 }

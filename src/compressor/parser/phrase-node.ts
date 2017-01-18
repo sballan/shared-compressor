@@ -1,6 +1,6 @@
 import { Node } from './node'
 import { WordNode } from './word-node'
-import { Word } from '../scanner/tokens';
+import { Word } from '../scanner/sym';
 
 export class PhraseNode extends Node<Word[]> {
 	constructor(
