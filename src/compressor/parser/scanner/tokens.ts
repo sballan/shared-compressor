@@ -19,7 +19,7 @@ export class Token {
 
 	constructor(
 		key: string,
-		public value: symbol[]
+		public value: Sym[]
 	) { 
 		const keySymbol = Symbol.for(key);
 		this.key = keySymbol;

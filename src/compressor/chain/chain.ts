@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import { Dictionary, Word } from '../dictionary';
-import { Node } from '../node';
+// import { Dictionary, Word } from '../dictionary';
+// import { Node } from '../node';
 
 export class Chain {
 	constructor(
