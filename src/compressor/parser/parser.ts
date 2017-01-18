@@ -1,5 +1,5 @@
 import { Dictionary } from './dictionary';
-import { Corpus, Scanner, Word, Token } from './scanner'
+import { Corpus, Scanner, Word, Token } from './.'
 import { WordNode } from './word-node';
 
 export class Parser {

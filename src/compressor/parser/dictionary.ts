@@ -1,5 +1,5 @@
 import { Node } from './node';
-import { Token } from './scanner/tokens';
+import { Token } from '../scanner/tokens';
 
 export class Dictionary extends Node<Token> {
 	public key: symbol;

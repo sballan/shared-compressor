@@ -1,11 +1,42 @@
 import * as bluebird from 'bluebird';
 import RedisCache from './redis-cache';
+import { Sym, Token, Terminal, Nonterminal } from '../compressor/scanner';
 
 export class Manager {
 	public tCache = new RedisCache(this.client, 't');
 	public nCache = new RedisCache(this.client, 'n');
 
-	constructor(public client) {	}
+	constructor(public client) { }
+
+	writeTerm(term: Terminal) : bluebird<string> {
+		return this.tCache.createKey(term.value);
+	}
+
+	writeTerms(terms: Terminal[]) : bluebird<string[]> {
+		return bluebird.map(terms, this.writeTerm)
+	}
+
+	writeNonterm(nonterm: Nonterminal) : bluebird<string> {
+		nonterm.build();
+		return this.writeTerms(nonterm.cache)
+			.then(res => {
+				return this.nCache.createKey(res.join('t:'))
+			})
+	}
+	
+	writeToken(token: Token) {
+		token.build()
+		bluebird.map(token.value, s => {
+			if (s instanceof Terminal) {
+				return this.writeTerm(s);
+			} else if (s instanceof Nonterminal) {
+				return this.writeNonterm(s);
+			}
+		})
+		.then(res => {
+			bluebird.each(token.)
+		})
+	}
 
 	// Takes string value of nonterm values divided by '-', returns string of only terms
 	// recursively simplifies the nonterm tokens.

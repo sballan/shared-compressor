@@ -12,7 +12,7 @@ export default class Cache {
 			.then(res => this.counter = res)
 	}
 
-	createKey(value: string) {
+	createKey(value: string) : bluebird<string> {
 		return this.map.getKey(value)
 		.then(res => {
 				if (res) return String(res);

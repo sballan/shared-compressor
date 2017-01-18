@@ -1,5 +1,5 @@
 import { Node } from './node'
-import { Word, Token } from './scanner/tokens';
+import { Word, Token } from '../scanner/tokens';
 
 export class WordNode extends Node<Token> {
 	addNode(key: string, value: Token, path: string[] = []) : Node<Token> {
