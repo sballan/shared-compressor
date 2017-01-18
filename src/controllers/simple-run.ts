@@ -10,7 +10,7 @@ export class SimpleRun {
 
 		const parser = new Scanner(input);
 		const output = parser.scanCorpus();
-		console.log(JSON.stringify(output.value[400].value[5]))
+		console.log(JSON.stringify(output.value[400].value[5]));
 		// corpus.makeMap(20);
 		// corpus.print();
 		console.log("Finished parsing, size: ", output.size)

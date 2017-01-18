@@ -1,6 +1,6 @@
 import * as bluebird from 'bluebird';
 
-export default class rMap {
+export default class RedisMap {
 	constructor(private client, public name) { }
 
 	setKey(value: string, key: string ) {

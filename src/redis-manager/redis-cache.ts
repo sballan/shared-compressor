@@ -1,9 +1,9 @@
 import * as bluebird from 'bluebird';
-import rMap from './rMap';
+import RedisMap from './redis-map';
 
-export default class rCache {
+export default class Cache {
 	public counter: string = '0';
-	private map: rMap;
+	private map: RedisMap;
 
 	constructor(private client, public name: string) { }
 	
