@@ -19,7 +19,6 @@ describe(`Token`, () => {
 
 	it(`can be constructed with a key: symbol and value: Sym[] argument`, () => {
 		const token = new Token([nonterm1, term3, nonterm2, term7])
-		console.log(token.literal)
 		expect(token).toBeDefined()
 	})
 
@@ -27,13 +26,12 @@ describe(`Token`, () => {
 		const token = new Token([nonterm1, term3, nonterm2, term7])
 
 		expect(token.key).toBe(Symbol.for('Hi Mom!'))
-		// expect(token.key).toBe(Symbol.for(token.literal))
+		expect(token.key).toBe(Symbol.for(token.literal))
 	})
 
 	it(`will return an existing Token if you try to create a new terminal using a value that already is a Token`, () => {
 		const token1 = new Token([nonterm1, term3, nonterm2, term7])
 		const token2 = new Token( [nonterm1, term3, nonterm2, term7])
-		console.log(token1)
 		expect(token1).toBe(token2)
 	})
 	
