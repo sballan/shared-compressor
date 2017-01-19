@@ -3,9 +3,16 @@ import { Terminal } from './terminal';
 
 // A Nonterminal is a Sym with a Sym[] for it's value
 export class Nonterminal extends Sym {
-    public value: Terminal[];
+	// key property will be the Symbol.for(value)
+	constructor(public value: Terminal[]) {
+			super(Nonterminal.literal(value))
+		}
 
 		public get literal() {
-			return this.value.map(v => v.value).join('');
+			return Nonterminal.literal(this.value);
+		}
+	
+		static literal(value: Terminal[]) {
+			return value.map(v => v.value).join('');
 		}
 }

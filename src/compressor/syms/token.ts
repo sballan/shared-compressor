@@ -3,21 +3,18 @@ import { Terminal } from './terminal';
 import { Nonterminal } from './nonterminal';
 // Tokens are Syms with a value that is a Sym[] with no Tokens.  Tokens also have a cache, so they are printable;
 export class Token extends Sym {
-    public cache: string;
+    public cache: string = Symbol.keyFor(this.key)
 
     constructor(
-			key: symbol,
 			public value: Sym[]
     ) {
-			super(key);
+			super(Sym.build(value));
 
 			if (Token.dictionary.has(this.key)) {
 					return Token.dictionary.get(this.key)
 			} else {
 					Token.dictionary.set(this.key, this)
 			}
-
-			this.build();
 
 		}
 	
@@ -26,28 +23,13 @@ export class Token extends Sym {
 			return this.cache;
 		}
 
-		purge() { this.cache = ""; };
+		purge() { this.cache = null; };
 	
-    build(value: Sym[] = this.value) : string {
-			let finished: boolean = false;
-			let newVals: Sym[] = [];
-
-			while (!finished) {
-				finished = true;
-				value.forEach(s => {
-					if (s instanceof Token) {
-						finished = false;
-						newVals.push(...s.value)
-					} else if (s instanceof Nonterminal
-											|| s instanceof Terminal) {
-						newVals.push(s)
-					}
-				});
-				value = newVals;
-			}
-			return this.cache = newVals.map(v=> v.value).join('')
+    build() : string {
+			return this.cache = Sym.build(this.value)
     }
 
+	
     static dictionary: Map<symbol, Token> = new Map();
 
 }

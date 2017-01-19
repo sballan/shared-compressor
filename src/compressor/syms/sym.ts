@@ -1,9 +1,12 @@
+import { Token } from './token'
+import { Terminal } from './terminal'
+import { Nonterminal } from './nonterminal'
+
 // A Sym is a unique key-value pair
 export abstract class Sym {
     public key: symbol;
-    public value: any | any[];
 
-    constructor(value) {
+    constructor(public value: any | any[]) {
 			this.key = Symbol.for(value)
 
 			if (Sym.dictionary.has(this.key)) {
@@ -15,5 +18,25 @@ export abstract class Sym {
 	
 		abstract get literal(): string;
 
-    static dictionary: Map<symbol, Sym> = new Map();
+		static dictionary: Map<symbol, Sym> = new Map();
+		
+		static build(value: Sym[]): string {
+			let finished: boolean = false;
+			let newVals: Sym[] = [];
+
+			while (!finished) {
+				finished = true;
+				value.forEach(s => {
+					if (s instanceof Token) {
+						finished = false;
+						newVals.push(...s.value)
+					} else if (s instanceof Nonterminal
+											|| s instanceof Terminal) {
+						newVals.push(s)
+					}
+				});
+				value = newVals;
+			}
+			return newVals.map(v=> v.value).join('')
+		}
 }
