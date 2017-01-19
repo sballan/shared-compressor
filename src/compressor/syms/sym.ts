@@ -2,7 +2,8 @@
 export abstract class Sym {
     public key: symbol;
 
-    constructor(public value: any | any[]) {
+		constructor(public value: any | any[]) {
+			
 			this.key = Symbol.for(value)
 
 			if (Sym.dictionary.has(this.key)) {

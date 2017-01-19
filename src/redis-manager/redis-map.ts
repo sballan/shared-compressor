@@ -17,11 +17,11 @@ export class RedisMap {
 	}
 
 	getVal( key: string) : bluebird<string> {
-		return this.client.hmgetAsync([`${this.name}:key`, `${this.name}:${key}`])
+		return this.client.hmgetAsync([`${this.name}:value`, `${this.name}:${key}`])
 	}
 
 	getKey(value: string) : bluebird<string> {
-		return this.client.hmgetAsync([`${this.name}:value`, `${this.name}:${value}`])
+		return this.client.hmgetAsync([`${this.name}:key`, value])
 	}
 
 	get( key: string) : bluebird<string> {
