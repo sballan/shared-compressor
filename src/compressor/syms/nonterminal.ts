@@ -12,7 +12,7 @@ export class Nonterminal extends Sym {
 			return Nonterminal.literal(this.value);
 		}
 	
-		static literal(value: Terminal[]) {
+		static literal(value: Terminal[]) : string {
 			return value.map(v => v.value).join('');
 		}
 }
