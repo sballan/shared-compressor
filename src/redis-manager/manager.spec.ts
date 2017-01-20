@@ -10,7 +10,7 @@ bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
 
-describe(`Manager`, () => {
+xdescribe(`Manager`, () => {
 	const client = redis.createClient()
 	let manager: Manager = new Manager(client);
 	const tCacheName = manager.tCache.name;
@@ -69,7 +69,7 @@ describe(`Manager`, () => {
 		return manager.writeNonterm(nonterm)
 			.then(res => {
 				nontermKey = `${nCacheName}:${res[0]}`
-				console.log("FINAL NONTERMKEY", nontermKey)
+				// console.log("FINAL NONTERMKEY", nontermKey)
 				return client.hmgetAsync([`${nCacheName}:value`, nontermKey])
 			})
 			.then(res => {
@@ -77,7 +77,7 @@ describe(`Manager`, () => {
 				return client.hmgetAsync([`${tCacheName}:value`, ...values])
 			})
 			.then(res => {
-				console.log('FINAL RES: ', res);
+				// console.log('FINAL RES: ', res);
 				expect(res[0]).toBe(nonterm.literal);
 
 			})

@@ -1,7 +1,7 @@
 import * as bluebird from 'bluebird';
 import { RedisCache } from './redis-cache';
-import { Sym, Token, Terminal, Nonterminal } from '../compressor/syms';
-
+// import { Sym, Token, Terminal, Nonterminal } from '../compressor/syms';
+import { Expr, Key, Terminal, Nonterminal } from '../compressor/syms';
 export class Manager {
 	public tCache: RedisCache;
 	public nCache: RedisCache;

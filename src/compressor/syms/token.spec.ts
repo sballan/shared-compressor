@@ -2,7 +2,7 @@ import { Terminal } from './terminal'
 import { Nonterminal } from './nonterminal';
 import { Token } from './token'
 
-describe(`Token`, () => {
+xdescribe(`Token`, () => {
 	const term1 = new Terminal('H');
 	const term2 = new Terminal('i');
 	const nonterm1 = new Nonterminal([term1, term2])
