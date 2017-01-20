@@ -40,25 +40,28 @@ export class RedisCache {
 		return this.getKey(value)
 			.then(res => {
 				if (res[0]) {
-					return res[0].replace(`${this.name}:`, '');
-				}
-				else {
+					let key = res[0].replace(`${this.name}:`, '');
+					console.log("THERE was a res and key", res, key)
+					return key;
+				} else {
+					console.log("NO KEY");
 					let key;
 					return this.incrCounter()
 						.then(res => {
 							key = String(res);
 							return this.set(key, value);
 						})
-						.then(res => key);
+						.then(res => {
+							console.log("final create key", key)
+							return key
+						});
 				}
 			})
 	}
 
+	// TODO remove	
 	add(value: string) {
 		return this.createKey(value)
-			.then(key => {
-				return this.set(key, value);
-			})
 	}
 
 	set(key: string, value: string) {

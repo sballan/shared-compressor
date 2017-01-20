@@ -3,23 +3,35 @@ import { RedisCache } from './redis-cache';
 import { Sym, Token, Terminal, Nonterminal } from '../compressor/syms';
 
 export class Manager {
-	public tCache = new RedisCache(this.client, 't');
-	public nCache = new RedisCache(this.client, 'n');
+	public tCache: RedisCache;
+	public nCache: RedisCache;
 
-	constructor(public client) { }
+	constructor(public client) {
+		this.tCache = new RedisCache(this.client, 't');
+		this.nCache = new RedisCache(this.client, 'n');
+	 }
+
+	init() {
+		return this.tCache.init()
+			.then(res => this.nCache.init())
+	}
 
 	writeTerm(term: Terminal) : bluebird<string> {
 		return this.tCache.createKey(term.value);
 	}
 
 	writeTerms(terms: Terminal[]) : bluebird<string[]> {
-		return bluebird.map(terms, this.writeTerm)
+		return bluebird.map(terms, t => this.writeTerm(t))
 	}
 
 	writeNonterm(nonterm: Nonterminal) : bluebird<string> {
 		return this.writeTerms(nonterm.value)
 			.then(res => {
-				return this.nCache.createKey(res.join('t:'))
+				const tCacheName = `${this.tCache.name}:`;
+				const value = tCacheName + res.join(tCacheName);
+				console.log("writenon", value)
+				console.log("tCacheName", tCacheName)
+				return this.nCache.createKey(value)
 			})
 	}
 	
