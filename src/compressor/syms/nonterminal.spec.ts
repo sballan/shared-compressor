@@ -1,7 +1,7 @@
 import { Terminal, Nonterminal } from './expr'
 
 describe(`Nonterminal`, () => {
-	it(`can be constructed with a single value: Terminal[] argument`, () => {
+	xit(`can be constructed with a single value: Terminal[] argument`, () => {
 		const term1 = new Terminal('H');
 		const term2 = new Terminal('i');
 		const nonterm = new Nonterminal([term1, term2])
@@ -10,7 +10,7 @@ describe(`Nonterminal`, () => {
 		expect(nonterm).toBeDefined()
 	})
 
-	it(`has a key property, which is a random symbol`, () => {
+	xit(`has a key property, which is a random symbol`, () => {
 		const term1 = new Terminal('H');
 		const term2 = new Terminal('i');
 		const nonterm = new Nonterminal([term1, term2])

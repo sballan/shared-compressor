@@ -12,23 +12,24 @@ export abstract class Expr {
 }
 
 export class Terminal extends Expr {
-	public value: string;
 	public key: symbol;
 
 	constructor(
-		value: string,
+		public value: string,
 		key?: symbol
 	) {
 		super();
-		this.key = key || Symbol.for(value);
-		this.value = value;
 
-		if (Terminal.all.has(this.key)) {
-			return Terminal.all.get(this.key);
+		if (Terminal.index.has(value)) {
+			let k = Terminal.index.get(value);
+			return Terminal.all.get(k);
 		} 
+
+		this.key = key || Symbol();
+
 		Terminal.all.set(this.key, this)
 		Terminal.allVals.set(this.key, value)
-
+		Terminal.index.set(value, this.key);
 
 	}
 
@@ -36,6 +37,7 @@ export class Terminal extends Expr {
 	
 	static all: Map<symbol, Terminal> = new Map()
 	static allVals: Map<symbol, string> = new Map()
+	static index: Map<string, symbol> = new Map()
 
 	static create(value: string, key?: symbol) : Terminal {
 		return new Terminal(value, key);
@@ -47,6 +49,7 @@ export class Terminal extends Expr {
 		}
 		return Terminal.allVals.get(terminal.key)
 	}
+
 
 }
 
@@ -64,16 +67,19 @@ export class Nonterminal extends Expr {
 			console.log("----- INVOKED")
 			const s = Nonterminal.index.get(value)
 			return Nonterminal.all.get(s);
-		} else console.log("---- NOT INVOKED")
+		} else {
+			console.log("---- NOT INVOKED")
+			this.key = this.key || Symbol('a');
 
-		this.key = this.key || Symbol('a');
+			Nonterminal.all.set(this.key, this)
+			Nonterminal.allVals.set(this.key, value)
+			Nonterminal.index.set(value, this.key)
 
-		Nonterminal.all.set(this.key, this)
-		Nonterminal.allVals.set(this.key, value)
-		Nonterminal.index.set(value, this.key)
-
-		const terms = Nonterminal.getTermsForValues(value);
-		this.value = terms.map(t=>t.key);
+			const terms = Nonterminal.getTermsForValues(value);
+			this.value = terms.map(t => t.key);
+			
+			console.log('terms',terms)
+		}
 
 	}
 
