@@ -14,6 +14,10 @@ export class Token<T extends Expr> {
 		Token.index.set(value, this.key);
 	}
 
+	toString() {
+		return `Token: ${this.value.literal}`;
+	}
+
 	static all: Map<symbol, Token<any>> = new Map();
 	static index: WeakMap<Expr, symbol> = new WeakMap();
 
@@ -32,8 +36,8 @@ export class Token<T extends Expr> {
 	}
 
 	private static createOne<T extends Expr>(value: any, constructor) : Token<T> {
-		let expr = Expr.create(value, constructor);
-		return new Token<T>(expr as T);
+		let expr = Expr.create<T>(value, constructor);
+		return new Token<T>(expr);
 	}
 
 	private static createMany<T extends Expr>(value: any[], constructor) : Token<T>[] {

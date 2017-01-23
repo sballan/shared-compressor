@@ -8,12 +8,16 @@ export abstract class Nonterminal implements Expr {
   get literal(): string {
 		return Token.toLiteral(this.value);
 	}
+
+	toString() { return this.literal };
 }
 
 export class Word extends Nonterminal {
 	constructor(public value: Array<Token<Char>>) {
 		super(value);
 	}
+
+	toString() { return this.literal };
 }
 
 export class Clause extends Nonterminal {

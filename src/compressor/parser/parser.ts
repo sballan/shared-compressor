@@ -6,7 +6,7 @@ import {
 
 export class Parser {
 	private input: string[];
-	private tokens: Token<Expr>[];
+	tokens: Token<Expr>[];
 
 
 	constructor(input: string) { 
@@ -14,23 +14,25 @@ export class Parser {
 	}
 
 	public run() {
-		console.log("About to scan: \n")
+		console.log("About to scan: \n", this.tokens)
 		this.scan();
-		console.log("About to parse words: \n")
+		console.log("About to parse words: \n", this.tokens)
 		this.words();
-		console.log("About to parse clauses: \n")
+		console.log("About to parse clauses: \n", this.tokens)
 		this.clauses();
-		console.log("About to parse sentences: \n")
-		this.sentences()
-		console.log("About to parse paragraphs: \n")
-		this.paragraphs();
+		console.log("About to parse sentences: \n", this.tokens[0].value.literal)
+		// this.sentences()
+		// console.log("About to parse paragraphs: \n")
+		// this.paragraphs();
 	}
 
-	private scan() {
+	scan() {
 		this.tokens = [];
 
 		this.input.forEach(c => {
-			const token = Token.create(c, Terminal)[0]
+			let token;
+			if (isChar(c)) token = Token.create<Char>(c, Char)[0]	
+			else token = Token.create<Separator>(c, Separator)[0]	
 			this.tokens.push(token)
 		})
 	}
@@ -45,24 +47,26 @@ export class Parser {
 		while (this.tokens.length > 0) {
 			const token = this.tokens.pop();
 
-			if (!(token instanceof Terminal)) {
+			if (!(token.value instanceof Terminal)) {
 				throw Error('Tried to parse Nonterminal as Word')
 			}
 
-			switch (true) {
-				case token.value.literal === ' ':
+			if (token.value instanceof Separator) {
+				if (buffer.length > 0) {
 					const wordToken = Token.create<Word>(buffer, Word)[0];
-					words.push(wordToken, token as Token<Terminal>);
-					break;
-				case isChar(token.value.literal):
-					buffer.push(token as Token<Terminal>);
-					break;
-				default:	
-					words.push(token as Token<Terminal>);
-					break;	
+					words.push(wordToken);
+				}
+				words.push(token as Token<Separator>);
+				buffer = [];
+			} else if (token.value instanceof Char) {
+				buffer.push(token as Token<Char>);
+			} else {
+				console.log(token);
+				throw Error('Wrong arguments to words()')	
 			}
-		}
 
+		}
+	
 		return this.tokens = words.reverse();
 
 	}
@@ -76,23 +80,33 @@ export class Parser {
 		while (this.tokens.length > 0) {
 			const token = this.tokens.pop();
 
-			if (!(token instanceof Word) && !(token instanceof Terminal)) {
+			if (!(token.value instanceof Word) && !(token.value instanceof Terminal)) {
 				throw Error('Tried to parse Phrase as Word')
 			}
 
-			switch (true) {
-				case token.value.literal === '.' || token.value.literal === ',':
-					const phraseToken = Token.create<Clause>(buffer, Clause)[0]
-					clauses.push(phraseToken, token as Token<Terminal>);	
-						break;
-				case isChar(token.value.literal):
-					buffer.push(token as Token<Terminal>);
-					break;
-				default:
-					clauses.push(token as Token<Terminal>);
-					break;
+			if (token.value instanceof Separator) {
+				if (token.value.literal === '.' || token.value.literal === ',') {
+					if (buffer.length > 0) {
+						const clauseToken = Token.create<Clause>(buffer, Clause)[0];
+						clauses.push(clauseToken);
+						buffer = [];
+					}
+					clauses.push(token as Token<Separator>);
+				} else {
+					buffer.push(token as Token<Separator>)
+				}			
+			} else if (token.value instanceof Word) {
+				buffer.push(token as Token<Word>);
+			} else {
+				console.log(token);
+				throw Error('Wrong arguments to words()')	
 			}
 
+		}
+
+		if (buffer.length > 0) {
+			const clauseToken = Token.create<Clause>(buffer, Clause)[0];
+			clauses.push(clauseToken);
 		}
 
 		return this.tokens = clauses.reverse();
@@ -108,8 +122,8 @@ export class Parser {
 		while (this.tokens.length > 0) {
 			const token = this.tokens.pop();
 
-			if (!(token instanceof Clause) && !(token instanceof Terminal)) {
-				throw Error('Tried to parse Phrase as Word')
+			if (!(token.value instanceof Clause) && !(token.value instanceof Terminal)) {
+				throw Error('Tried to parse Sentence as Phrase')
 			}
 
 			switch (true) {
@@ -141,7 +155,7 @@ export class Parser {
 			const token = this.tokens.pop();
 
 			if (!(token instanceof Sentence) && !(token instanceof Terminal)) {
-				throw Error('Tried to parse Sentence as Clause')
+				throw Error('Tried to parse Paragraph as Sentence')
 			}
 
 			switch (true) {
