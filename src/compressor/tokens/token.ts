@@ -1,4 +1,6 @@
 import { Expr, isChar } from './expr';
+import { Terminal } from './terminal';
+import { Nonterminal } from './nonterminal';
 
 export class Token<T extends Expr> {
 	public key: symbol;
@@ -14,15 +16,21 @@ export class Token<T extends Expr> {
 		Token.index.set(value, this.key);
 	}
 
+	get literal() { return this.value.literal }
+
 	toString() {
-		return `Token: ${this.value.literal}`;
+		return `Token: ${this.literal}`;
 	}
 
 	static all: Map<symbol, Token<any>> = new Map();
 	static index: WeakMap<Expr, symbol> = new WeakMap();
 
-	private static _toLiteral(token: Token<Expr>) : string {
-		return token.value.literal;
+	private static _toLiteral(token: Token<Expr>): string {
+		if (token.value instanceof Terminal) {
+			return token.literal;
+		} else if (token.value instanceof Nonterminal) {
+			return this._toLiterals(token.value.value)
+		}
 	}
 
 	private static _toLiterals(tokens: Token<Expr>[]): string {

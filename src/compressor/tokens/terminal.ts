@@ -2,11 +2,10 @@ import { Expr, isChar } from './expr';
 
 export abstract class Terminal extends Expr {
 	constructor(public value: string) { 
-		super();
+		super(value);
 		if (Terminal.all.has(value)) {
 			return Terminal.all.get(value)
 		}
-
 		Terminal.all.set(value, this);
 	}
 

@@ -18,9 +18,9 @@ export class Parser {
 		this.scan();
 		console.log("About to parse words: \n", this.tokens)
 		this.words();
-		console.log("About to parse clauses: \n", this.tokens)
-		this.clauses();
-		console.log("About to parse sentences: \n", this.tokens[0].value.literal)
+		console.log("About to parse clauses: \n", this.tokens[1].toString())
+		// this.clauses();
+		// console.log("About to parse sentences: \n", this.tokens[0].toString())
 		// this.sentences()
 		// console.log("About to parse paragraphs: \n")
 		// this.paragraphs();
