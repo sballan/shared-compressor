@@ -1,5 +1,6 @@
 import * as bluebird from 'bluebird';
-import { Terminal, Nonterminal } from '../compressor/syms';
+import { Terminal, Nonterminal } from '../compressor/tokens';
+
 import { RedisMap } from './redis-map';
 import { RedisCache } from './redis-cache';
 import { Manager } from './manager';
