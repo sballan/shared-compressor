@@ -1,6 +1,6 @@
 import { Terminal, Nonterminal } from './expr'
 
-describe(`Nonterminal`, () => {
+xdescribe(`Nonterminal`, () => {
 	xit(`can be constructed with a single value: Terminal[] argument`, () => {
 		const term1 = new Terminal('H');
 		const term2 = new Terminal('i');

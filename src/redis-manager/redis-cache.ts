@@ -41,10 +41,8 @@ export class RedisCache {
 			.then(res => {
 				if (res[0]) {
 					let key = res[0].replace(`${this.name}:`, '');
-					console.log("THERE was a res and key", res, key)
 					return key;
 				} else {
-					console.log("NO KEY");
 					let key;
 					return this.incrCounter()
 						.then(res => {
@@ -52,7 +50,6 @@ export class RedisCache {
 							return this.set(key, value);
 						})
 						.then(res => {
-							console.log("final create key", key)
 							return key
 						});
 				}

@@ -24,7 +24,7 @@ xdescribe(`Manager`, () => {
 		return manager.init().then(done);
 	})
 
-	it(`can write a terminal to redis by passing a Terminal to writeTerm()`, (done) => {
+	xit(`can write a terminal to redis by passing a Terminal to writeTerm()`, (done) => {
 		const termString = 'myTerm';
 		const term = new Terminal(termString);
 

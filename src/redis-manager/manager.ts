@@ -29,8 +29,6 @@ export class Manager {
 			.then(res => {
 				const tCacheName = `${this.tCache.name}:`;
 				const value = tCacheName + res.join(tCacheName);
-				console.log("writenon", value)
-				console.log("tCacheName", tCacheName)
 				return this.nCache.createKey(value)
 			})
 	}
@@ -70,7 +68,6 @@ export class Manager {
 
 		return this.client.hmgetAsync([cArr[0], cArr[1]])
 			.then(res => {
-				console.log("simplify res: ", res);
 				tTokens += res;
 				tTokens += nTokens.join('-');
 				return this.simplify(tTokens);

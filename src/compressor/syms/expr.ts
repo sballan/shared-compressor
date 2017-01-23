@@ -62,13 +62,10 @@ export class Nonterminal extends Expr {
 		key?: symbol
 	) {
 		super();
-		console.log("Value", value)
 		if (Nonterminal.index.has(value)) {
-			console.log("----- INVOKED")
 			const s = Nonterminal.index.get(value)
 			return Nonterminal.all.get(s);
 		} else {
-			console.log("---- NOT INVOKED")
 			this.key = this.key || Symbol('a');
 
 			Nonterminal.all.set(this.key, this)
@@ -78,7 +75,6 @@ export class Nonterminal extends Expr {
 			const terms = Nonterminal.getTermsForValues(value);
 			this.value = terms.map(t => t.key);
 			
-			console.log('terms',terms)
 		}
 
 	}

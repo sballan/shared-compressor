@@ -1,7 +1,7 @@
 import { Sym } from './sym';
 
 // A Terminal is a Sym with a string for it's value
-export class Token extends Sym {
+export abstract class Token<T> extends Sym {
 	constructor(public value: string) {
 		super(value)
 	}

@@ -1,7 +1,7 @@
 import { Terminal } from './expr';
 import { Key } from './key';
 
-describe(`Terminal`, () => {
+xdescribe(`Terminal`, () => {
 	it(`can be constructed with a single value argument`, () => {
 		const term = new Terminal('Term');
 		expect(term).toBeDefined()
