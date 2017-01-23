@@ -22,7 +22,7 @@ export class Word extends Nonterminal {
 }
 
 export class Clause extends Nonterminal {
-	constructor(public value: Array<Token<Word | Terminal>>) {
+	constructor(public value: Array<Token<Word | Separator>>) {
 		super(value);
 	}
 
@@ -33,7 +33,7 @@ export class Clause extends Nonterminal {
 }
 
 export class Sentence extends Nonterminal {
-	constructor(public value: Array<Token<Clause | Terminal>>) {
+	constructor(public value: Array<Token<Clause | Separator>>) {
 		super(value);
 	}
 
@@ -43,7 +43,7 @@ export class Sentence extends Nonterminal {
 }
 
 export class Paragraph extends Nonterminal {
-	constructor(public value: Array<Token<Clause | Terminal>>) {
+	constructor(public value: Array<Token<Clause | Separator>>) {
 		super(value);
 	}
 
@@ -53,7 +53,7 @@ export class Paragraph extends Nonterminal {
 }
 
 export class Corpus extends Nonterminal {
-	constructor(public value: Array<Token<Paragraph | Terminal>>) {
+	constructor(public value: Array<Token<Paragraph | Separator>>) {
 		super(value);
 	}
 

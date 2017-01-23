@@ -18,9 +18,9 @@ export class Parser {
 		this.scan();
 		console.log("About to parse words: \n", this.tokens)
 		this.words();
-		console.log("About to parse clauses: \n", this.tokens[1].toString())
-		// this.clauses();
-		// console.log("About to parse sentences: \n", this.tokens[0].toString())
+		console.log("About to parse clauses: \n", this.tokens)
+		this.clauses();
+		console.log("About to parse sentences: \n", this.tokens[2].toString())
 		// this.sentences()
 		// console.log("About to parse paragraphs: \n")
 		// this.paragraphs();
@@ -31,8 +31,8 @@ export class Parser {
 
 		this.input.forEach(c => {
 			let token;
-			if (isChar(c)) token = Token.create<Char>(c, Char)[0]	
-			else token = Token.create<Separator>(c, Separator)[0]	
+			if (isChar(c)) token = Token.create<Char>(c, Char)	
+			else token = Token.create<Separator>(c, Separator)
 			this.tokens.push(token)
 		})
 	}
@@ -53,7 +53,7 @@ export class Parser {
 
 			if (token.value instanceof Separator) {
 				if (buffer.length > 0) {
-					const wordToken = Token.create<Word>(buffer, Word)[0];
+					const wordToken = Token.create<Word>(buffer, Word) as Token<Word>;
 					words.push(wordToken);
 				}
 				words.push(token as Token<Separator>);
@@ -87,7 +87,7 @@ export class Parser {
 			if (token.value instanceof Separator) {
 				if (token.value.literal === '.' || token.value.literal === ',') {
 					if (buffer.length > 0) {
-						const clauseToken = Token.create<Clause>(buffer, Clause)[0];
+						const clauseToken = Token.create<Clause>(buffer, Clause) as Token<Clause>;
 						clauses.push(clauseToken);
 						buffer = [];
 					}
@@ -105,7 +105,7 @@ export class Parser {
 		}
 
 		if (buffer.length > 0) {
-			const clauseToken = Token.create<Clause>(buffer, Clause)[0];
+			const clauseToken = Token.create<Clause>(buffer, Clause) as Token<Clause>;
 			clauses.push(clauseToken);
 		}
 
@@ -128,7 +128,7 @@ export class Parser {
 
 			switch (true) {
 				case token.value.literal === '.':
-					const sentenceToken = Token.create<Sentence>(buffer, Sentence)[0];
+					const sentenceToken = Token.create<Sentence>(buffer, Sentence) as Token<Sentence>;
 					sentences.push(sentenceToken, token as Token<Terminal>);	
 						break;
 				case isChar(token.value.literal):
@@ -160,7 +160,7 @@ export class Parser {
 
 			switch (true) {
 				case token.value.literal === '\n\n':
-					const paragraphToken = Token.create<Paragraph>(buffer, Paragraph)[0];
+					const paragraphToken = Token.create<Paragraph>(buffer, Paragraph) as Token<Paragraph>;
 					paragraphs.push(paragraphToken, token as Token<Terminal>);	
 					break;
 				case isChar(token.value.literal):

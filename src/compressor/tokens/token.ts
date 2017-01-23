@@ -43,18 +43,13 @@ export class Token<T extends Expr> {
 			this._toLiteral(token);
 	}
 
-	private static createOne<T extends Expr>(value: any, constructor) : Token<T> {
+	static create<T extends Expr>(value: any, constructor) : Token<T> {
 		let expr = Expr.create<T>(value, constructor);
 		return new Token<T>(expr);
 	}
 
-	private static createMany<T extends Expr>(value: any[], constructor) : Token<T>[] {
-		return value.map(v => this.createOne<T>(v, constructor));
+	static createMany<T extends Expr>(value: any[], constructor) : Token<T>[] {
+		return value.map(v => this.create<T>(v, constructor));
 	}
 
-	static create<T extends Expr>(value: any | any[], constructor) : Token<T>[] {
-		if (Array.isArray(value)) {
-			return this.createMany<T>(value, constructor);
-		} else return [this.createOne<T>(value, constructor)];
-	}
 }
