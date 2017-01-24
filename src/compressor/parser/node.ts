@@ -1,7 +1,11 @@
-export class Node<T> {
-	public key: string;
+import { Token, Expr, Terminal } from '../tokens';
+
+const s = new Node<Token<Terminal>>()
+
+export class Node<T extends Token<Expr>> {
+	public key: symbol;
 	public value: T;
-	public map: Map<string, Node<any>> = new Map();
+	public map: Map<symbol, Node<T>> = new Map();
 	public freq: number = 0;
 	public parent: Node<T>;
 
@@ -11,13 +15,13 @@ export class Node<T> {
 		return nodes;
 	}
 
-	constructor(key?: string, value?: T, parent?: Node<T>) {
+	constructor(key?: symbol, value?: T, parent?: Node<T>) {
 		this.key = key;
 		this.value = value;  
 		this.parent = parent;
 	}
 
-	addNode(key: string, value: T, path: string[] = []): Node<T> {
+	addNode(key: symbol, value: T, path: string[] = []): Node<T> {
 		if (path.length > 0) {
 			return this.findNode(path).addNode(key, value);
 		}
@@ -28,12 +32,12 @@ export class Node<T> {
 		}
 	}
 
-	getNode(path: string | string[]) {
+	getNode(path: symbol | symbol[]) {
 		if (Array.isArray(path)) return this.findNode(path);
 		return this.map.get(path);
 	}
 
-  findNode(path: string[]) : Node<any> {
+  findNode(path: symbol[]) : Node<any> {
   	const length = path.length;
 		let map = this.map;
     let currentNode: Node<T> = this;   
@@ -46,11 +50,11 @@ export class Node<T> {
     return currentNode;
 	}
 
-	has(key: string) : boolean {
+	has(key: symbol) : boolean {
 		return this.map.has(key);
 	}
 
-	getDec(path: string[]) : Node<any>[] {
+	getDec(path: symbol[]) : Node<any>[] {
 		let length = path.length;
 		const nodes: Node<any>[] = [];
 		let current: Node<any> = this;
