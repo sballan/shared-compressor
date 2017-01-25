@@ -170,7 +170,8 @@ class Scanner {
         }
         if (this.tokens.length > 1)
             throw Error("Buffer overflow");
-        return this.inputTokens = [this.tokens.reverse().pop()];
+        this.inputTokens = this.tokens.reverse();
+        return this.inputTokens[0];
     }
 }
 exports.Scanner = Scanner;
