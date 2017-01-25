@@ -1,3 +1,3 @@
-export * from "./models";
+export * from "./compressor";
 export * from "./controllers";
 
