@@ -41,6 +41,8 @@ export class Separator extends Terminal {
 		return this.value;
 	}
 
+	type: string = "separator";
+
 }
 
 export class Char extends Terminal {
@@ -52,5 +54,7 @@ export class Char extends Terminal {
 	get literal() : string {
 		return this.value;
 	}
+
+	type: string = "char";
 
 }

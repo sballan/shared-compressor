@@ -1,13 +1,16 @@
 import * as bluebird from 'bluebird';
+
+import { Cache } from '../compressor/manager/abstract-cache';
 import { RedisMap } from './redis-map';
 
-export class RedisCache {
+export class RedisCache extends Cache{
 	public counter: string = '1';
 	private map: RedisMap;
 
 	// name will be the name of the internal map
-	constructor(private client, public name: string) {
-		this.map = new RedisMap(this.client, this.name);
+	constructor(client, name: string) {
+		super(client, name);
+		this.map = new RedisMap(client, name);
 	 }
 	
 	private setKey(value: string, key: string) {

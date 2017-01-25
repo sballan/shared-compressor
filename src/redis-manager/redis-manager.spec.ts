@@ -3,7 +3,7 @@ import { Terminal, Nonterminal } from '../compressor/tokens';
 
 import { RedisMap } from './redis-map';
 import { RedisCache } from './redis-cache';
-import { Manager } from './manager';
+import { RedisManager } from './redis-manager';
 
 const redis = require('redis');
 
@@ -13,7 +13,7 @@ bluebird.promisifyAll(redis.Multi.prototype);
 
 xdescribe(`Manager`, () => {
 	const client = redis.createClient()
-	let manager: Manager = new Manager(client);
+	let manager: RedisManager = new RedisManager(client);
 	const tCacheName = manager.tCache.name;
 	const nCacheName = manager.nCache.name;
 

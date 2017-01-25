@@ -8,6 +8,7 @@ export function isChar(value: string): boolean {
 
 export abstract class Expr {
 	literal: string;
+	type: string = "expr";
 	
 	constructor(public value: string | Array<Token<Expr>>) {	}
 

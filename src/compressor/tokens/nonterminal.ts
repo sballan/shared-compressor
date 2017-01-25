@@ -18,6 +18,8 @@ export class Word extends Nonterminal {
 		return this.value.map(v => v.literal).join('');
 	}
 
+	type: string = "word";
+
 	toString() { return this.literal };
 }
 
@@ -30,6 +32,8 @@ export class Clause extends Nonterminal {
 		console.log("CLAUSE")
 		return this.value.map(v=>v.literal).join('');
 	}
+
+	type: string = "clause";
 }
 
 export class Sentence extends Nonterminal {
@@ -40,6 +44,8 @@ export class Sentence extends Nonterminal {
 	get literal(): string {
 		return this.value.map(v=>v.literal).join('');
 	}
+
+	type: string = "sentence";
 }
 
 export class Paragraph extends Nonterminal {
@@ -50,6 +56,8 @@ export class Paragraph extends Nonterminal {
 	get literal(): string {
 		return this.value.map(v=>v.literal).join('');
 	}
+
+	type: string = "paragraph";
 }
 
 export class Corpus extends Nonterminal {
@@ -60,4 +68,6 @@ export class Corpus extends Nonterminal {
 	get literal(): string {
 		return this.value.map(v=>v.literal).join('');
 	}
+
+	type: string = "corpus";
 }

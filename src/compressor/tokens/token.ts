@@ -16,7 +16,8 @@ export class Token<T extends Expr> {
 		Token.index.set(value, this.key);
 	}
 
-	get literal() { return this.value.literal }
+	get literal() { return this.value.literal; }
+	get type() { return this.value.type; }
 
 	toString() {
 		return `Token: ${this.literal}`;

@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
-    "jasmine": "registry:dt/jasmine#2.5.0+20161119044246"
+    "jasmine": "registry:dt/jasmine#2.5.0+20161119044246",
+    "pouchdb": "registry:dt/pouchdb#5.4.4+20160916155957"
   }
 }

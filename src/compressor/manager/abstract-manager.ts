@@ -1,31 +1,27 @@
 import * as bluebird from 'bluebird';
-import { RedisCache } from './redis-cache';
+import { Cache } from './abstract-cache';
 
-import { Expr, Token, Terminal, Nonterminal } from '../compressor/tokens';
-export class Manager {
-	public tCache: RedisCache;
-	public nCache: RedisCache;
+import { Expr, Token, Terminal, Nonterminal } from '../tokens';
 
-	constructor(public client) {
-		this.tCache = new RedisCache(this.client, 't');
-		this.nCache = new RedisCache(this.client, 'n');
-	 }
+export abstract class Manager {
+	public tCache: Cache;
+	public nCache: Cache;
 
-	init() {
-		return this.tCache.init()
-			.then(res => this.nCache.init())
+	constructor(public client) { }
+
+	abstract init(): bluebird<any>
+
+	writeTerm(term: Token<Terminal>) : bluebird<string> {
+		return this.tCache.createKey(term);
 	}
 
-	writeTerm(term: Terminal) : bluebird<string> {
-		return this.tCache.createKey(term.value);
-	}
-
-	writeTerms(terms: Terminal[]) : bluebird<string[]> {
+	writeTerms(terms: Token<Terminal>[]) : bluebird<string[]> {
 		return bluebird.map(terms, t => this.writeTerm(t))
 	}
 
+
 	writeNonterm(nonterm: Nonterminal) : bluebird<string> {
-		return this.writeTerms(nonterm.value)
+		return this.writeTerms(nonterm)
 			.then(res => {
 				const tCacheName = `${this.tCache.name}:`;
 				const value = tCacheName + res.join(tCacheName);
@@ -33,9 +29,9 @@ export class Manager {
 			})
 	}
 	
-	writeToken(token: Token) {
+	writeToken(token: Token<Expr>) {
 		token.build()
-		bluebird.map(token.value, s => {
+		bluebird.map(token.value.value, s => {
 			if (s instanceof Terminal) {
 				return this.writeTerm(s);
 			} else if (s instanceof Nonterminal) {
