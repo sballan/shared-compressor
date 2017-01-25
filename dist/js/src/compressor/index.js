@@ -4,9 +4,4 @@ function __export(m) {
 }
 __export(require('./tokens'));
 __export(require('./parser'));
-const tokens_2 = require('./tokens');
-{
-    tokens_2.Terminals.
-    ;
-}
 //# sourceMappingURL=index.js.map
