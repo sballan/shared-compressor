@@ -45,7 +45,7 @@ class Scanner {
                 throw Error('Wrong arguments to words()');
             }
         }
-        return this.tokens.reverse();
+        return this.inputTokens = this.tokens.reverse();
     }
     clauses() {
         this.tokens = [];
@@ -77,7 +77,7 @@ class Scanner {
             this.tokens.push(clauseToken);
             this.buffer = [];
         }
-        return this.tokens.reverse();
+        return this.inputTokens = this.tokens.reverse();
     }
     sentences() {
         this.tokens = [];
@@ -109,7 +109,7 @@ class Scanner {
             this.tokens.push(clauseToken);
             this.buffer = [];
         }
-        return this.tokens.reverse();
+        return this.inputTokens = this.tokens.reverse();
     }
     paragraphs() {
         this.tokens = [];
@@ -141,7 +141,7 @@ class Scanner {
             this.tokens.push(paragraphToken);
             this.buffer = [];
         }
-        return this.tokens.reverse();
+        return this.inputTokens = this.tokens.reverse();
     }
     corpus() {
         this.tokens = [];
@@ -170,7 +170,7 @@ class Scanner {
         }
         if (this.tokens.length > 1)
             throw Error("Buffer overflow");
-        return this.tokens.reverse().pop();
+        return this.inputTokens = [this.tokens.reverse().pop()];
     }
 }
 exports.Scanner = Scanner;

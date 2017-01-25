@@ -53,7 +53,7 @@ export class Scanner {
 
 		}
 	
-		return this.tokens.reverse() as Token<Word>[];
+		return this.inputTokens = this.tokens.reverse() as Token<Word>[];
 
 	}
 
@@ -90,7 +90,7 @@ export class Scanner {
 			this.buffer = [];
 		}
 
-		return this.tokens.reverse() as Token<Clause>[];
+		return this.inputTokens = this.tokens.reverse() as Token<Clause>[];
 
 	}
 
@@ -127,7 +127,7 @@ export class Scanner {
 			this.buffer = [];
 		}
 
-		return this.tokens.reverse() as Token<Sentence>[];
+		return this.inputTokens = this.tokens.reverse() as Token<Sentence>[];
 
 	}
 
@@ -164,7 +164,7 @@ export class Scanner {
 			this.buffer = [];
 		}
 
-		return this.tokens.reverse() as Token<Paragraph>[];
+		return this.inputTokens = this.tokens.reverse()as Token<Paragraph>[];
 
 	}
 
@@ -197,7 +197,7 @@ export class Scanner {
 
 		if(this.tokens.length>1) throw Error("Buffer overflow")
 
-		return this.tokens.reverse().pop() as Token<Corpus>;
+		return this.inputTokens = [this.tokens.reverse().pop() as Token<Corpus>];
 
 	}
 }
