@@ -1,5 +1,4 @@
 "use strict";
-const s = new Node();
 class Node {
     constructor(key, value, parent) {
         this.map = new Map();

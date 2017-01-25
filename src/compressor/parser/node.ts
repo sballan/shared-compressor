@@ -1,7 +1,5 @@
 import { Token, Expr, Terminal } from '../tokens';
 
-const s = new Node<Token<Terminal>>()
-
 export class Node<T> {
 	public key: symbol;
 	public value: T;
