@@ -2,6 +2,8 @@
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-require('./dist/js/start');
-__export(require('./src'));
+__export(require('./expr'));
+__export(require('./nonterminal'));
+__export(require('./terminal'));
+__export(require('./token'));
 //# sourceMappingURL=index.js.map

@@ -2,6 +2,7 @@
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-require('./dist/js/start');
-__export(require('./src'));
+__export(require('./manager'));
+__export(require('./redis-cache'));
+__export(require('./redis-map'));
 //# sourceMappingURL=index.js.map
