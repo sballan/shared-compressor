@@ -16,16 +16,19 @@ export class Scanner {
 	public inputTokens: Token<Expr>[] = [];
 
 	constructor(public inputString: string) { 
-		this.terminals(inputString)
+		this.inputTokens = this.terminals(inputString);
 	}
 
-	terminals(inputString: string = this.inputString) {
+	terminals(inputString: string = this.inputString): Token<Terminal>[] {
+		const tokens: Token<Terminal>[] = [];
+
 		inputString.split('').forEach(c => {
 			let token;
 			if (isChar(c)) token = Token.create<Char>(c, Char)	
 			else token = Token.create<Separator>(c, Separator)
-			this.inputTokens.push(token)
+			tokens.push(token)
 		})
+		return tokens as Token<Terminal>[]
 	}
 	
 	words(): Token<Word>[] {
@@ -57,7 +60,7 @@ export class Scanner {
 
 	}
 
-	clauses() {
+	clauses(): Token<Clause>[] {
 		this.tokens = [];
 		while (this.inputTokens.length > 0) {
 			const current = this.inputTokens.pop();
@@ -94,7 +97,7 @@ export class Scanner {
 
 	}
 
-	sentences() {
+	sentences(): Token<Sentence>[] {
 		this.tokens = [];
 		while (this.inputTokens.length > 0) {
 			const current = this.inputTokens.pop();
@@ -131,7 +134,7 @@ export class Scanner {
 
 	}
 
-	paragraphs() {
+	paragraphs(): Token<Paragraph>[] {
 		this.tokens = [];
 		while (this.inputTokens.length > 0) {
 			const current = this.inputTokens.pop();
@@ -168,7 +171,7 @@ export class Scanner {
 
 	}
 
-	corpus() {
+	corpus(): Token<Corpus> {
 		this.tokens = [];
 		while (this.inputTokens.length > 0) {
 			const current = this.inputTokens.pop();
@@ -196,8 +199,8 @@ export class Scanner {
 		}
 
 		if(this.tokens.length>1) throw Error("Buffer overflow")
-		this.inputTokens = this.tokens.reverse() as Token<Corpus>[];
-		return this.inputTokens[0];
+		this.inputTokens = this.tokens.reverse();
+		return this.inputTokens[0] as Token<Corpus>;
 
 	}
 }

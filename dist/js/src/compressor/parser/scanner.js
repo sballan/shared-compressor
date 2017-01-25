@@ -10,17 +10,19 @@ class Scanner {
         this.buffer = [];
         this.tokens = [];
         this.inputTokens = [];
-        this.terminals(inputString);
+        this.inputTokens = this.terminals(inputString);
     }
     terminals(inputString = this.inputString) {
+        const tokens = [];
         inputString.split('').forEach(c => {
             let token;
             if (isChar(c))
                 token = tokens_1.Token.create(c, tokens_1.Char);
             else
                 token = tokens_1.Token.create(c, tokens_1.Separator);
-            this.inputTokens.push(token);
+            tokens.push(token);
         });
+        return tokens;
     }
     words() {
         this.tokens = [];
