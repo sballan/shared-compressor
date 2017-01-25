@@ -29,33 +29,33 @@ export class Parser {
 		// this.paragraphs();
 	}
 
-	private words(): Token<Word>[] {
+	public words(): Token<Word>[] {
 		const wordTokens = this.scanner.words();
 		
 		return wordTokens;
 	}
 
-	private clauses() {
+	public clauses() {
 		const clauseTokens = this.scanner.clauses();
 		
 		return clauseTokens;
 
 	}
 
-	private sentences() : Token<Sentence>[] {
+	public sentences() : Token<Sentence>[] {
 		const sentenceTokens = this.scanner.sentences();
 		
 		return sentenceTokens;
 	}
 
-	private paragraphs() : Token<Paragraph>[]{
+	public paragraphs() : Token<Paragraph>[]{
 		const paragraphTokens = this.scanner.paragraphs();
 		
 		return paragraphTokens;
 
 	}
 
-	private corpus() : Token<Corpus>{
+	public corpus() : Token<Corpus>{
 		const corpusToken = this.scanner.corpus();
 		
 		return corpusToken;
