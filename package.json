@@ -1,7 +1,7 @@
 {
-  "name": "markov",
+  "name": "shared-parser",
   "version": "0.0.1",
-  "description": "markov chain tool",
+  "description": "Shared parser for user text input",
   "main": "index.js",
   "author": "Samuel Ballan",
   "license": "MIT",
