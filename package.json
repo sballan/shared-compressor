@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "deploy": "npm run browserify && npm run surge",
-    "surge": "surge ./dist sballan.markov.surge.sh",
+    "surge": "surge ./dist sharedparser.surge.sh",
     "browserify": "browserify ./dist/js/start.js -o ./dist/bundle.js"
   },
   "dependencies": {
@@ -26,5 +26,5 @@
     "tsc": "^1.20150623.0",
     "typescript": "^2.0.10"
   },
-  "repository": "https://github.com/sballan/shared-compressor.git"
+  "repository": "https://github.com/sballan/shared-parser.git"
 }

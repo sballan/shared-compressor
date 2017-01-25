@@ -2,37 +2,37 @@ import { Token, Expr, Terminal } from '../tokens';
 
 const s = new Node<Token<Terminal>>()
 
-export class Node<T extends Token<Expr>> {
+export class Node<T> {
 	public key: symbol;
 	public value: T;
-	public map: Map<symbol, Node<T>> = new Map();
+	public map: Map<symbol, Node<any>> = new Map();
 	public freq: number = 0;
-	public parent: Node<T>;
+	public parent: Node<any>;
 
-	get nodes() {
+	get nodes() : Node<any>[] {
 		const nodes = [];
 		this.map.forEach(n => nodes.push(n))
 		return nodes;
 	}
 
-	constructor(key?: symbol, value?: T, parent?: Node<T>) {
+	constructor(key?: symbol, value?: T, parent?: Node<any>) {
 		this.key = key;
 		this.value = value;  
 		this.parent = parent;
 	}
 
-	addNode(key: symbol, value: T, path: string[] = []): Node<T> {
+	addNode<U>(key: symbol, value: U, path: symbol[] = []): Node<U> {
 		if (path.length > 0) {
 			return this.findNode(path).addNode(key, value);
 		}
-		else if (this.map.has(key)) return this.map.get(key);
+		else if (this.map.has(key)) return this.map.get(key) as Node<U>;
 		else {
-			this.map.set(key, new Node<T>(key, value, this));
-			return this.map.get(key);
+			this.map.set(key, new Node<U>(key, value, this));
+			return this.map.get(key) as Node<U>;
 		}
 	}
 
-	getNode(path: symbol | symbol[]) {
+	getNode(path: symbol | symbol[]): Node<any> {
 		if (Array.isArray(path)) return this.findNode(path);
 		return this.map.get(path);
 	}
@@ -40,7 +40,7 @@ export class Node<T extends Token<Expr>> {
   findNode(path: symbol[]) : Node<any> {
   	const length = path.length;
 		let map = this.map;
-    let currentNode: Node<T> = this;   
+    let currentNode: Node<any> = this;   
       
 		for (let i = 0; i < length; i++) {
 			currentNode = map.get(path[i]);
