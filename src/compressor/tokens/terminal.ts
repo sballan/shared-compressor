@@ -13,6 +13,14 @@ export abstract class Terminal extends Expr {
 		return this.value;
 	}
 
+	get _id() : string {
+		return this.tokenize();
+	}
+
+	tokenize(): string {
+		return `${this.type}:${this.literal}`
+	}
+
 	private static _toLiteral(term: Terminal) : string {
 		return term.literal;
 	}
@@ -36,12 +44,9 @@ export class Separator extends Terminal {
 		super(value);
 		if(isChar(value)) throw new Error('Separators cannot be Chars')
 	}
-
-	get literal() : string {
-		return this.value;
-	}
-
-	type: string = "separator";
+	
+	public get type() { return Separator.type; }
+	static type: string = "se";
 
 }
 
@@ -51,10 +56,7 @@ export class Char extends Terminal {
 		if(!isChar(value)) throw new Error('Chars cannot be Separators')
 	}
 
-	get literal() : string {
-		return this.value;
-	}
-
-	type: string = "char";
+	public get type() { return Char.type; }
+	static type: string = "ch";
 
 }

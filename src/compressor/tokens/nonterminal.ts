@@ -7,6 +7,14 @@ export abstract class Nonterminal extends Expr {
 
 	abstract get literal(): string;
 
+	tokenize(): string {
+		return `${this.type}:${this.value.map(v=>v.value._id)}`
+	}
+
+	get _id() : string {
+		return this.tokenize()
+	}
+
 	toString() { return this.literal };
 }
 
@@ -18,8 +26,9 @@ export class Word extends Nonterminal {
 		return this.value.map(v => v.literal).join('');
 	}
 
-	type: string = "word";
-
+	public get type() { return Word.type; }
+	static type: string = "wo";
+	
 	toString() { return this.literal };
 }
 
@@ -33,7 +42,8 @@ export class Clause extends Nonterminal {
 		return this.value.map(v=>v.literal).join('');
 	}
 
-	type: string = "clause";
+	public get type() { return Clause.type; }
+	static type: string = "cl";
 }
 
 export class Sentence extends Nonterminal {
@@ -44,8 +54,8 @@ export class Sentence extends Nonterminal {
 	get literal(): string {
 		return this.value.map(v=>v.literal).join('');
 	}
-
-	type: string = "sentence";
+	public get type() { return Sentence.type; }
+	static type: string = "se";
 }
 
 export class Paragraph extends Nonterminal {
@@ -57,7 +67,8 @@ export class Paragraph extends Nonterminal {
 		return this.value.map(v=>v.literal).join('');
 	}
 
-	type: string = "paragraph";
+	public get type() { return Paragraph.type; }
+	static type: string = "pa";
 }
 
 export class Corpus extends Nonterminal {
@@ -69,5 +80,6 @@ export class Corpus extends Nonterminal {
 		return this.value.map(v=>v.literal).join('');
 	}
 
-	type: string = "corpus";
+	public get type() { return Corpus.type; }
+	static type: string = "co";
 }

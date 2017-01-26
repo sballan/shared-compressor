@@ -6,6 +6,7 @@
   "author": "Samuel Ballan",
   "license": "MIT",
   "scripts": {
+		"start": "pouchdb-server --level-backend redisdown",
     "deploy": "npm run browserify && npm run surge",
     "surge": "surge ./dist sharedparser.surge.sh",
     "browserify": "browserify ./dist/js/start.js -o ./dist/bundle.js"
