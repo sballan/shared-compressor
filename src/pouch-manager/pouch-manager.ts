@@ -1,45 +1,75 @@
 import * as bluebird from 'bluebird';
-import { RedisCache } from './redis-cache';
+import * as PouchDb from 'pouchdb';
+import { Tokenizable } from '../compressor/tokens';
 
 import { Expr, Token, Terminal, Nonterminal } from '../compressor/tokens';
 import { Manager } from '../compressor/manager/abstract-manager';
 
+export interface Writeable {
+	_id: string;
+	type: string;
+	tokenKeys: string[];
+	literal: string
+}
+
 export class PouchDbManager extends Manager {
 
-	init() {
-		return this.tCache.init()
-			.then(res => this.nCache.init())
+	init(options?) {
+		this.client = new PouchDb(this.name, options);
+
 	}
 
-	writeTerm(term: Token<Terminal>) : bluebird<string> {
-		return this.tCache.createKey(term.value);
+	private tokenFactory(token: Token<Tokenizable>): Writeable {
+		return {
+			_id: token.key,
+			type: token.type,
+			tokenKeys: token.tokenKeys,
+			literal: token.literal
+		}
 	}
 
-	writeTerms(terms: Token<Terminal>[]) : bluebird<string[]> {
-		return bluebird.map(terms, t => this.writeTerm(t))
-	}
-
-	writeNonterm(nonterm: Token<Nonterminal>) : bluebird<string> {
-		return this.writeTerms(nonterm.value)
-			.then(res => {
-				const tCacheName = `${this.tCache.name}:`;
-				const value = tCacheName + res.join(tCacheName);
-				return this.nCache.createKey(value)
+	readTerminal(tokenId: string) {
+		return this.client.get(tokenId)
+			.then(token => {
+				if (token.type !== 'ch' && token.type !== 'se') {
+					return Promise.reject({});
+				}
+				console.log("reading terminal!")
+				return token
 			})
+			.catch(function (err) {
+				console.log(err);
+			});
 	}
-	
-	writeToken(token: Token) {
-		token.build()
-		bluebird.map(token.value, s => {
-			if (s instanceof Terminal) {
-				return this.writeTerm(s);
-			} else if (s instanceof Nonterminal) {
-				return this.writeNonterm(s);
-			}
+
+	writeTerminal(token: Token<Terminal>) {
+		return this.client.put(
+			this.tokenFactory(token)
+		).then(function (res) {
+			console.log("Writing Terminal Token!", res)
+			// handle response
+		}).catch(function (err) {
+			console.log(err);
 		})
-		.then(res => {
-			// bluebird.each(token.)
+	}
+
+	writeTerminals(tokens: Token<Terminal>[]) {
+		return this.client.bulkDocs(
+			tokens.map(t=>this.tokenFactory(t))
+		).then(function (res) {
+			console.log("Writing Terminal Tokens!", res)
+			// handle response
+		}).catch(function (err) {
+			console.log(err);
 		})
+	}
+
+	writeNonterminal(token: Token<Nonterminal>) {
+		
+	}
+
+	writeToken(token: Token<Tokenizable>) {
+		
 	}
 
 	// Takes string value of nonterm values divided by '-', returns string of only terms

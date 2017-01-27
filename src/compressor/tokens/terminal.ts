@@ -9,11 +9,15 @@ export abstract class Terminal extends Expr {
 		Terminal.all.set(value, this);
 	}
 
+	get tokenKeys(): string[] {
+		return [this.key];
+	}
+
 	get literal() : string {
 		return this.value;
 	}
 
-	get _id() : string {
+	get key() : string {
 		return this.tokenize();
 	}
 
@@ -44,7 +48,7 @@ export class Separator extends Terminal {
 		super(value);
 		if(isChar(value)) throw new Error('Separators cannot be Chars')
 	}
-	
+
 	public get type() { return Separator.type; }
 	static type: string = "se";
 

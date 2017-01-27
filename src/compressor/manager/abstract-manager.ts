@@ -7,7 +7,7 @@ export abstract class Manager {
 	public tCache: Cache;
 	public nCache: Cache;
 
-	constructor(public client) { }
+	constructor(public client, public name) { }
 
 	abstract init(): bluebird<any>
 

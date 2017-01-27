@@ -12,7 +12,7 @@ const Nonterminals = {
 	Nonterminal, Word, Clause, Sentence, Paragraph, Corpus
 }
 
-export { Expr } from './expr';
+export { Expr, Tokenizable } from './expr';
 export { Terminals }	
 export { Terminal, Char, Separator } from './terminal';
 export { Nonterminals };
