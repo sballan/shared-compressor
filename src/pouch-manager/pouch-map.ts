@@ -31,18 +31,6 @@ export class PouchMap {
 }
 
 
-p.get('123').then(function(doc) {
-	return p.put({
-		_rev: doc._rev,
-		_id: doc._id,
-    name: "Let's Dance"
-  });
-}).then(function(response) {
-  console.log(response)
-}).catch(function (err) {
-  console.log(err);
-	});
-
 
 
 
